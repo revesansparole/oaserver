@@ -1,0 +1,25 @@
+easy deploy
+rest api
+launch computations
+retrieve result
+
+
+OAServer
+ - init (up and running)
+ - register (ready for computation)
+ - state
+ - compute
+ - delete
+
+
+tuto
+ - test with python script
+ - test with workflow, need workflow package up and running
+
+What about provenance??
+
+oaserver package (create package of current virtualenv for future deploy)
+use tuto to deploy the archive on remote machine
+oaserver launch (launch server, option type, url?)
+
+make communication more general i.e. scifloware agnostic
