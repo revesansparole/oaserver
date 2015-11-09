@@ -2,3 +2,6 @@
 
 
 # }}
+requests
+watchdog
+web.py

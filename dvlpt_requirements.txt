@@ -6,3 +6,5 @@ coverage
 nose
 
 # }}
+
+requests_mock

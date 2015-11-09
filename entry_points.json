@@ -1,0 +1,5 @@
+{
+    "console_scripts": [
+        "oaserver = oaserver.arch_package:main"
+    ]
+}

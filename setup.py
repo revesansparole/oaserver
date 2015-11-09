@@ -31,6 +31,22 @@ with open("src/oaserver/version.py") as fp:
     exec(fp.read(), version)
 
 
+data_files = []
+
+nb = len(normpath(abspath("src/oaserver_data"))) + 1
+
+
+def data_rel_pth(pth):
+    """ Return path relative to pkg_data
+    """
+    abs_pth = normpath(abspath(pth))
+    return abs_pth[nb:]
+
+
+for root, dnames, fnames in walk("src/oaserver_data"):
+    for name in fnames:
+        data_files.append(data_rel_pth(pj(root, name)))
+
 
 setup(
     name='oaserver',
@@ -45,15 +61,16 @@ setup(
 
     packages=find_packages('src'),
     package_dir={'': 'src'},
+    include_package_data=True,
+    package_data={'oaserver_data': data_files},
     install_requires=parse_requirements("requirements.txt"),
     tests_require=parse_requirements("dvlpt_requirements.txt"),
     entry_points={
-        # 'console_scripts': [
-        #       'fake_script = openalea.fakepackage.amodule:console_script', ],
-        # 'gui_scripts': [
-        #      'fake_gui = openalea.fakepackage.amodule:gui_script',],
-        #      'wralea': wralea_entry_points
+        'console_scripts': [
+            'oaserver = oaserver.arch_package:main',
+        ],
     },
+
     keywords='',
     test_suite='nose.collector',
 )

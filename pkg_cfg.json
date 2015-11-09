@@ -8,6 +8,9 @@
     "coverage": {
         "option": null
     }, 
+    "data": {
+        "option": null
+    }, 
     "doc": {
         "description": "Computation server oriented OpenAlea", 
         "keywords": ""

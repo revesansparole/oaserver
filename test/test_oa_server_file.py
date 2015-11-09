@@ -1,0 +1,210 @@
+import json
+from nose.tools import assert_raises, with_setup
+from os import mkdir, remove
+from os.path import exists
+from os.path import join as pj
+import requests_mock
+from shutil import rmtree
+from time import sleep
+
+from oaserver.json_tools import get_json, post_json
+from oaserver.oa_server_file import OAServerFile
+
+
+tmp_dir = "takapouet_oasfile"
+wdir = pj(tmp_dir, "watch")
+
+
+def setup_func():
+    if not exists(tmp_dir):
+        mkdir(tmp_dir)
+    if not exists(wdir):
+        mkdir(wdir)
+
+
+def teardown_func():
+    if exists(tmp_dir):
+        rmtree(tmp_dir)
+
+
+def wait_for_file(pth):
+    for i in range(5):
+        if exists(pth):
+            return pth
+
+        sleep(0.1)
+
+    raise UserWarning("file not created")
+
+
+def test_server_watch_path_exists():
+    assert_raises(UserWarning, lambda: OAServerFile("doofus", "tooky"))
+
+
+@with_setup(setup_func, teardown_func)
+def test_server_register_correctly_locally():
+    reg_file = pj(tmp_dir, "registration.json")
+    oas = OAServerFile("doofus", wdir)
+    oas.register(reg_file)
+
+    assert exists(reg_file)
+    reg = get_json(reg_file)
+    for key in ('id', 'url', 'urlping', 'urldelete'):
+        assert key in reg['args']
+
+
+@with_setup(setup_func, teardown_func)
+def test_server_register_correctly_when_started_already():
+    reg_file = pj(tmp_dir, "registration.json")
+    oas = OAServerFile("doofus", wdir)
+    oas.start()
+    oas.register(reg_file)
+
+    assert exists(reg_file)
+    reg = get_json(reg_file)
+    for key in ('id', 'url', 'urlping', 'urldelete'):
+        assert key in reg['args']
+
+    oas.stop()
+
+
+@with_setup(setup_func, teardown_func)
+def test_server_register_correctly_remote():
+    reg_url = "http://doofus.com/is/comming/for/you.json"
+    oas = OAServerFile("doofus", wdir)
+
+    def text_callback(request, context):
+        reg = json.loads(request.text)
+        for key in ('id', 'url', 'urlping', 'urldelete'):
+            assert key in reg['args']
+
+    with requests_mock.Mocker() as m:
+        m.post(reg_url, text=text_callback)
+        oas.register(reg_url)
+
+
+@with_setup(setup_func, teardown_func)
+def test_server_register_raise_error_if_not_registering():
+    reg_url = "http://doofus.com/is/comming/for/you.json"
+    oas = OAServerFile("doofus", wdir)
+
+    with requests_mock.Mocker() as m:
+        m.post(reg_url, text="", status_code=500)
+        assert_raises(UserWarning, lambda: oas.register(reg_url))
+
+
+@with_setup(setup_func, teardown_func)
+def test_server_ping():
+    answer_file = pj(tmp_dir, "answer.json")
+
+    oas = OAServerFile("doofus", wdir)
+    oas.start()
+    oas.register(answer_file)
+
+    ping_pth = get_json(answer_file)['args']['urlping']
+    remove(answer_file)
+
+    post_json(ping_pth, dict(url=answer_file))
+
+    ans = get_json(wait_for_file(answer_file))
+    assert ans['state'] == 'waiting'
+    assert ans['id'] == "doofus"
+
+    oas.stop()
+    oas.join()
+
+    assert not exists(ping_pth)
+
+
+@with_setup(setup_func, teardown_func)
+def test_server_compute():
+    answer_file = pj(tmp_dir, "answer.json")
+
+    oas = OAServerFile("doofus", wdir)
+    oas.start()
+    oas.register(answer_file)
+
+    cpt_pth = get_json(answer_file)['args']['url']
+    remove(answer_file)
+
+    post_json(cpt_pth, dict(workflow="pycode:def main(a): return a",
+                            urldata="a = 1",
+                            urlreturn=answer_file))
+
+    ans = get_json(wait_for_file(answer_file))
+    assert ans['result'] == 1
+    assert ans['id'] == "doofus"
+
+    oas.stop()
+    oas.join()
+
+    assert not exists(cpt_pth)
+
+
+@with_setup(setup_func, teardown_func)
+def test_server_delete():
+    answer_file = pj(tmp_dir, "answer.json")
+
+    oas = OAServerFile("doofus", wdir)
+    oas.start()
+    oas.register(answer_file)
+
+    del_pth = get_json(answer_file)['args']['urldelete']
+    remove(answer_file)
+
+    post_json(del_pth, dict())
+
+    oas.join()
+
+    assert not exists(del_pth)
+
+
+pycode = """
+from time import sleep
+
+def main(a):
+    sleep(a / 10.)
+    return a
+"""
+
+
+@with_setup(setup_func, teardown_func)
+def test_server_full_life():
+    answer_file = pj(tmp_dir, "answer.json")
+
+    oas = OAServerFile("doofus", wdir)
+    oas.start()
+    oas.register(answer_file)
+
+    cpt_pth = get_json(answer_file)['args']['url']
+    ping_pth = get_json(answer_file)['args']['urlping']
+    del_pth = get_json(answer_file)['args']['urldelete']
+    remove(answer_file)
+
+    for a in (1, 2):
+        post_json(cpt_pth, dict(workflow="pycode:" + pycode,
+                                urldata="a = %d" % a,
+                                urlreturn=answer_file))
+
+        answer_ping = pj(tmp_dir, "answer_ping.json")
+        post_json(ping_pth, dict(url=answer_ping))
+        ans = get_json(wait_for_file(answer_ping))
+        remove(answer_ping)
+        assert ans['id'] == "doofus"
+        assert ans['state'] == 'running'
+
+        ans = get_json(wait_for_file(answer_file))
+        remove(answer_file)
+        assert ans['result'] == a
+        assert ans['id'] == "doofus"
+
+        answer_ping = pj(tmp_dir, "answer_ping.json")
+        post_json(ping_pth, dict(url=answer_ping))
+        ans = get_json(wait_for_file(answer_ping))
+        remove(answer_ping)
+        assert ans['id'] == "doofus"
+        assert ans['state'] == 'waiting'
+
+    post_json(del_pth, dict())
+
+    oas.join()
