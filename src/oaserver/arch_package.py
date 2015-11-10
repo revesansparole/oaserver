@@ -16,10 +16,7 @@ from zipfile import ZipFile
 import data_access
 
 
-def main():
-    # parse arguments
-    output_name = sys.argv[1]
-
+def archivate(output_name):
     # find current virtual env
     if not hasattr(sys, 'real_prefix'):
         raise UserWarning("Need to be run from an activated virtualenv")
@@ -47,11 +44,19 @@ def main():
 
     # zip everything
     cwd = getcwd()
-    chdir(tmp_dir)
+    chdir(tmp_root)
     with ZipFile(pj(cwd, output_name), 'w') as ziph:
-        for root, dirs, files in walk(vname):
+        for root, dirs, files in walk("."):
             for name in files:
                 ziph.write(pj(root, name))
 
     chdir(cwd)
     shutil.rmtree(tmp_dir)
+
+
+def main():
+    # parse arguments
+    output_name = sys.argv[1]
+
+    # perform task
+    archivate(output_name)

@@ -2,11 +2,49 @@
 """
 
 import json
+from os import remove
+from os.path import exists
 import requests
 from requests.exceptions import ConnectionError, InvalidSchema
+from time import sleep
 from urllib2 import URLError
 import urlparse
 import web
+
+
+def wait_for_file(pth, nb_cycles = 5):
+    """ Wait for the creation of a file a given number of cycles.
+    Then if file still not created raise UserWarning
+
+    args:
+     - pth (str): path to file to watch
+     - nb_cycles (int): number of try before raising error
+    """
+    for i in range(nb_cycles):
+        if exists(pth):
+            return pth
+
+        sleep(0.1)
+
+    raise UserWarning("file not created")
+
+
+def wait_for_content(pth, nb_cycles = 5):
+    """ Wait for a file to appear, read its content
+    then remove it.
+
+    use :func:`wait_for_file`
+    args:
+     - pth (str): path to file to watch
+     - nb_cycles (int): number of try before raising error
+
+    return:
+     - (any): any data stored in pth in json format
+    """
+    wait_for_file(pth, nb_cycles)
+    cnt = get_json(pth)
+    remove(pth)
+    return cnt
 
 
 def parse_url(url, default_scheme='file'):

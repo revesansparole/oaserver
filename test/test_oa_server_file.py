@@ -5,9 +5,8 @@ from os.path import exists
 from os.path import join as pj
 import requests_mock
 from shutil import rmtree
-from time import sleep
 
-from oaserver.json_tools import get_json, post_json
+from oaserver.json_tools import get_json, post_json, wait_for_file
 from oaserver.oa_server_file import OAServerFile
 
 
@@ -25,16 +24,6 @@ def setup_func():
 def teardown_func():
     if exists(tmp_dir):
         rmtree(tmp_dir)
-
-
-def wait_for_file(pth):
-    for i in range(5):
-        if exists(pth):
-            return pth
-
-        sleep(0.1)
-
-    raise UserWarning("file not created")
 
 
 def test_server_watch_path_exists():
