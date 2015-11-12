@@ -1,0 +1,23 @@
+step 1:
+launch find_all_libs.py on remote machine on which you
+want to install virtual env
+
+step 2:
+Retrieve all_lib.pkl file and copy it
+on the local machine you want to clone
+
+step 3:
+launch archivate.py script with two arguments:
+ - path to virtualenv you want to clone (e.g. : ~/venv/toto)
+ - path to all_lib.pkl file that was created
+
+step 4:
+retrieve the toto.tar file that was created and copy it on
+distant machine
+
+step 5:
+dearchivate
+launch relocate.py that was in the archive
+
+step 6:
+activate virtual env the normal way
