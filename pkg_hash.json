@@ -27,6 +27,13 @@
         "PMNMLcOL4W3uxGlMJBT9UE95RHRMUeDef02D51OybmIT51sBhkDv48R3ohQ82OjPwFf9sSnmnszpciNfXYCG2g=="
     ], 
     "./entry_points.json": [], 
+    "./example/archivate oas.py": [], 
+    "./example/deploy oas.py": [], 
+    "./example/find_all_libs.py": [], 
+    "./example/lib_tools.py": [], 
+    "./example/perform computation.py": [], 
+    "./example/subpro.py": [], 
+    "./example/tuto.txt": [], 
     "./info.txt": [], 
     "./pkg_cfg.json": [], 
     "./pkg_hash.json": [], 
@@ -34,7 +41,7 @@
         "AWuoxM/eZa+Zy1+ouKN+Lrc/SBs640mRZm3y4E/rbAOGZuvR7CtvYjlndWAzxwLd5fQj99R6tu0YJ/9TeDcx9w=="
     ], 
     "./setup.cfg": [
-        "lV45exBFBdDpY59/NGCQTt6jtpbTrAXdzcEZ+bm/XdJutGh/30cHJXm4re1Dpn9jKyc9pu1EYNwplV2cNXkiFg=="
+        "tp+N2CvhY2X/NyvOJdxQ60JgsmXk1uZeyMgSZdH7AuY3UnR61pTaVIRJUVrECdVLVWVEPVCNuip3N7rjMDEdow=="
     ], 
     "./setup.py": [
         "B+GBvPzyiakpKNKukKnWdmM2ZxMp+NsNoXvAbIWS2t/Cz9dpbVuPSAnVdO7tp910fzNi6FPzzyzh6oiB05IXTw=="
@@ -75,5 +82,38 @@
     "./test/test_json_tools.py": [], 
     "./test/test_oa_server.py": [], 
     "./test/test_oa_server_file.py": [], 
-    "./test/test_oa_server_rest.py": []
+    "./test/test_oa_server_rest.py": [], 
+    "./try/oacpp/.sconsign.dblite": [], 
+    "./try/oacpp/AUTHORS.txt": [], 
+    "./try/oacpp/ChangeLog.txt": [], 
+    "./try/oacpp/LICENSE.txt": [], 
+    "./try/oacpp/NEWS.txt": [], 
+    "./try/oacpp/README.txt": [], 
+    "./try/oacpp/SConstruct": [], 
+    "./try/oacpp/SConstruct~": [], 
+    "./try/oacpp/TODO.txt": [], 
+    "./try/oacpp/doc/Makefile": [], 
+    "./try/oacpp/doc/conf.py": [], 
+    "./try/oacpp/doc/contents.rst": [], 
+    "./try/oacpp/doc/make.bat": [], 
+    "./try/oacpp/doc/user/autosum.rst": [], 
+    "./try/oacpp/doc/user/index.rst": [], 
+    "./try/oacpp/doc/user/manual.rst": [], 
+    "./try/oacpp/doc/user/overview.txt": [], 
+    "./try/oacpp/metainfo.ini": [], 
+    "./try/oacpp/note.txt": [], 
+    "./try/oacpp/options.py": [], 
+    "./try/oacpp/setup.py": [], 
+    "./try/oacpp/src/cpp/SConscript": [], 
+    "./try/oacpp/src/cpp/code.cpp": [], 
+    "./try/oacpp/src/cpp/code.cpp~": [], 
+    "./try/oacpp/src/cpp/code.h": [], 
+    "./try/oacpp/src/cpp/code.h~": [], 
+    "./try/oacpp/src/oacpp/__init__.py": [], 
+    "./try/oacpp/src/oacpp_wralea/__init__.py": [], 
+    "./try/oacpp/src/oacpp_wralea/__wralea__.py": [], 
+    "./try/oacpp/src/wrapper/SConscript": [], 
+    "./try/oacpp/src/wrapper/SConscript~": [], 
+    "./try/oacpp/src/wrapper/code_wrapper.cpp": [], 
+    "./try/oacpp/src/wrapper/code_wrapper.cpp~": []
 }

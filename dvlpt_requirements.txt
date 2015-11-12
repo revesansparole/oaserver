@@ -1,4 +1,4 @@
-# {{pkglts pydist.dvlpt_requirements,
+# {{pkglts pysetup.dvlpt_requirements,
 github3.py
 mock
 lice
