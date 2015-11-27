@@ -2,7 +2,11 @@
     "./.coverage": [], 
     "./.coveragerc": [], 
     "./.gitignore": [
-        "lp0pP0xxa+62aU80Vew750Qk/Shn4NtM464aLebb15fLCdDHow9A5g2KImTJ+WImcAJxeYnOM8NqRpIhPdyKHA=="
+        "D2nmBZgLHlBJO+maLI1MxerUAGKP5nvICqakQqX/BAHBlPGbveJWp6NTQlGpslsHvZwE054K1lxvhToRO5YNAA=="
+    ], 
+    "./.pypirc": [
+        "nriHqyg0tZfJFzsWieR7xycUgCTFzHouvN5qvVWyEOMrf1J/z+hjfg/cJLXKbVOXKZce/CjIsONfHsrvI3R7rA==", 
+        "A/psVrrS7dUCsFN8HRQOYonTTb/pEVXipsvQ7dUjKtvtImZiaPZ+WQj/VojxFWOpW7b9p+piouCPi9zfKa8f1A=="
     ], 
     "./AUTHORS.rst": [], 
     "./CONTRIBUTING.rst": [], 
@@ -14,7 +18,7 @@
         "w1vU1xkyfZOT3SYWZi9p0zGaHCUGZN6/tPnYZH9YOwTmlhGpVDjLgLtN8PRmKxZniZeKbeex+CJ//u1n+dJqOQ=="
     ], 
     "./README.rst": [
-        "NpInImcdK7HQFLVdzLlDEZbA9uAEZaKM6lTCUCfQi5aOf93nTfnCh9DJp9Dr0ZWsxXLXTQrH3g+rbgh7kRECnA=="
+        "32N/JY1ibM+SLEG+0Oz1AVVpqBzd82ZBxaQLR0EDCvfcgjsBI4ECVL9v2pYwhk8cYdWwZZqXehv/jAS+8sGEew=="
     ], 
     "./doc/authors.rst": [], 
     "./doc/contributing.rst": [], 
@@ -24,7 +28,7 @@
     "./doc/readme.rst": [], 
     "./doc/usage.rst": [], 
     "./dvlpt_requirements.txt": [
-        "PMNMLcOL4W3uxGlMJBT9UE95RHRMUeDef02D51OybmIT51sBhkDv48R3ohQ82OjPwFf9sSnmnszpciNfXYCG2g=="
+        "9+OM/0w7THT2FPQKCZ77bqeAeSN5DVvDyJoOL2dM3fVXgekWbD0ebk4hOLdZGMU8uXIAvqiZMezQluJIePnMCA=="
     ], 
     "./entry_points.json": [], 
     "./example/archivate oas.py": [], 
@@ -35,8 +39,6 @@
     "./example/subpro.py": [], 
     "./example/tuto.txt": [], 
     "./info.txt": [], 
-    "./pkg_cfg.json": [], 
-    "./pkg_hash.json": [], 
     "./requirements.txt": [
         "AWuoxM/eZa+Zy1+ouKN+Lrc/SBs640mRZm3y4E/rbAOGZuvR7CtvYjlndWAzxwLd5fQj99R6tu0YJ/9TeDcx9w=="
     ], 
@@ -44,7 +46,7 @@
         "tp+N2CvhY2X/NyvOJdxQ60JgsmXk1uZeyMgSZdH7AuY3UnR61pTaVIRJUVrECdVLVWVEPVCNuip3N7rjMDEdow=="
     ], 
     "./setup.py": [
-        "B+GBvPzyiakpKNKukKnWdmM2ZxMp+NsNoXvAbIWS2t/Cz9dpbVuPSAnVdO7tp910fzNi6FPzzyzh6oiB05IXTw=="
+        "FHmcENehlaNnGbvB7fwcXK/cn48qu7tbKP7T7jVVPwulqCBGtyhKFJjmO7cwrQqTM3lIP2SM0gOkL/j4NkZdPw=="
     ], 
     "./src/oaserver.egg-info/PKG-INFO": [
         "lTSqKH85koV1jYSQt+7J9xGs6sga0QiZ52rzuIQUBbbdv/MDjktaPUuaQYFgJwExmc/knDDcCGz0VyEb13qYqQ=="
@@ -61,7 +63,7 @@
     ], 
     "./src/oaserver/arch_package.py": [], 
     "./src/oaserver/data_access.py": [
-        "SA+i+yKgxzOc+DMKgQDYU8Gbz0AeMTOncQHy6a+NlsymJF79dcCyML9FPo6UP5enOV3W02hcWP2E9rKrg1pKFw=="
+        "Oheqd12RY7sfXYRsn4tbmQN6353s1KLafo1JAB0BgYkajyse/ybDmqOCMMEaDnN2sypEI4W3bbIysnED6AfYbw=="
     ], 
     "./src/oaserver/eval_script.py": [], 
     "./src/oaserver/json_tools.py": [], 
@@ -70,7 +72,7 @@
     "./src/oaserver/oa_server_rest.py": [], 
     "./src/oaserver/threaded_server.py": [], 
     "./src/oaserver/version.py": [
-        "9u2W46jEMEMq3ZJFhNBSDLcfV8R73vM1FPWlZz2LsxyOwW1/0fpDM16Yxig6tFhfdhNxz+Qw8gX0btUZqB898w=="
+        "rep8qZC1x3KRxI2WV6ntdkkwkkCj3JGsbbMDcLX8DPRK2ntIq1xqJpoFx+oqzMxj1xCB9K7ce7v2c+mMMT0pBw=="
     ], 
     "./src/oaserver_data/__init__.py": [], 
     "./src/oaserver_data/relocate.py": [], 

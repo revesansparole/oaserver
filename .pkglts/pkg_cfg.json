@@ -1,16 +1,15 @@
 {
+    "_pkglts": {
+        "auto_install": true, 
+        "use_prompts": false
+    }, 
     "base": {
         "namespace": null, 
         "owner": "revesansparole", 
-        "pkg_fullname": "oaserver", 
         "pkgname": "oaserver"
     }, 
-    "coverage": {
-        "option": null
-    }, 
-    "data": {
-        "option": null
-    }, 
+    "coverage": {}, 
+    "data": {}, 
     "doc": {
         "description": "Computation server oriented OpenAlea", 
         "keywords": ""
@@ -24,30 +23,25 @@
         "project": "oaserver", 
         "year": "2015"
     }, 
-    "pkglts": {
-        "use_prompts": false
-    }, 
-    "pysetup": {
-        "author_email": "revesansparole@gmail.com", 
-        "author_name": "revesansparole", 
+    "pypi": {
         "classifiers": [
             "Development Status :: 2 - Pre-Alpha", 
             "Intended Audience :: Developers", 
             "License :: OSI Approved :: BSD License", 
-            "Natural Language :: English", 
-            "Programming Language :: Python :: 2", 
-            "Programming Language :: Python :: 3"
-        ], 
+            "Natural Language :: English"
+        ]
+    }, 
+    "pysetup": {
+        "author_email": "revesansparole@gmail.com", 
+        "author_name": "revesansparole", 
         "intended_versions": [
             "27"
         ]
     }, 
-    "test": {
-        "option": "None"
-    }, 
+    "test": {}, 
     "version": {
-        "major": "0", 
-        "minor": "1", 
-        "post": "0"
+        "major": 0, 
+        "minor": 1, 
+        "post": 1
     }
 }

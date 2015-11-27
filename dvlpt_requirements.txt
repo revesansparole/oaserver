@@ -1,9 +1,10 @@
 # {{pkglts pysetup.dvlpt_requirements,
+twine
 github3.py
-mock
 lice
-coverage
 nose
+coverage
+mock
 
 # }}
 

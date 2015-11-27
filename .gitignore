@@ -1,6 +1,9 @@
 # {{pkglts github,
 *.py[cod]
 
+# pkglts files
+.pkglts
+
 # Packages
 *.egg
 *.egg-info
@@ -26,6 +29,9 @@ lib64
 
 
 
+
+# pypi rc file
+.pypirc
 
 # }}
 
