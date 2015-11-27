@@ -9,6 +9,7 @@
         "pkgname": "oaserver"
     }, 
     "coverage": {}, 
+    "coveralls": {}, 
     "data": {}, 
     "doc": {
         "description": "Computation server oriented OpenAlea", 
@@ -18,6 +19,7 @@
     "github": {
         "project": "oaserver"
     }, 
+    "landscape": {}, 
     "license": {
         "name": "mit", 
         "organization": "OpenAlea", 
@@ -39,8 +41,13 @@
             "27"
         ]
     }, 
+    "readthedocs": {
+        "project": "{{key, github.project}}"
+    }, 
+    "sphinx": {}, 
     "test": {}, 
     "tox": {}, 
+    "travis": {}, 
     "version": {
         "major": 0, 
         "minor": 1, 

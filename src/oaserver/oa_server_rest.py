@@ -1,8 +1,8 @@
 """ REST implementation of OA server
 """
 
-from requests import ConnectionError
 import threading
+from urllib2 import URLError
 
 from .json_tools import post_json, retrieve_json
 from .oa_server import OAServer
@@ -86,11 +86,8 @@ class OAServerRest(ThreadedServer):
 
         url_register = "http://%s:%d/init/CreateEngine/" % sfws_descr
         try:
-            ret = post_json(url_register, data)
-        except ConnectionError:
-            raise UserWarning("unable to register with scifloware server")
-
-        if ret.status_code > 400:
+            post_json(url_register, data)
+        except URLError:
             raise UserWarning("unable to register with scifloware server")
 
         oa_server.registered()
