@@ -2,7 +2,7 @@
     "./.coverage": [], 
     "./.coveragerc": [], 
     "./.gitignore": [
-        "D2nmBZgLHlBJO+maLI1MxerUAGKP5nvICqakQqX/BAHBlPGbveJWp6NTQlGpslsHvZwE054K1lxvhToRO5YNAA=="
+        "0Kgn6jSwJAzZASIgRdsWj4/eDYyv8CtUFFs8K6zLWW6D0HddxSLWyqAK8OLfzDIryru4y2lNP/eT9RKVrkhA+Q=="
     ], 
     "./.pypirc": [
         "nriHqyg0tZfJFzsWieR7xycUgCTFzHouvN5qvVWyEOMrf1J/z+hjfg/cJLXKbVOXKZce/CjIsONfHsrvI3R7rA==", 
@@ -28,7 +28,7 @@
     "./doc/readme.rst": [], 
     "./doc/usage.rst": [], 
     "./dvlpt_requirements.txt": [
-        "9+OM/0w7THT2FPQKCZ77bqeAeSN5DVvDyJoOL2dM3fVXgekWbD0ebk4hOLdZGMU8uXIAvqiZMezQluJIePnMCA=="
+        "Hk8qHMRRVdVmOv5aiLdiR88rLs9ZQ0XPaSWSqyhZl/F8HuVajy4gnjDJBKJx1q9vR1auTU6a108mS9nuvEhUmg=="
     ], 
     "./entry_points.json": [], 
     "./example/archivate oas.py": [], 
@@ -43,7 +43,7 @@
         "AWuoxM/eZa+Zy1+ouKN+Lrc/SBs640mRZm3y4E/rbAOGZuvR7CtvYjlndWAzxwLd5fQj99R6tu0YJ/9TeDcx9w=="
     ], 
     "./setup.cfg": [
-        "tp+N2CvhY2X/NyvOJdxQ60JgsmXk1uZeyMgSZdH7AuY3UnR61pTaVIRJUVrECdVLVWVEPVCNuip3N7rjMDEdow=="
+        "+DyAbFPaeFRJXYRB5TmAjJI2EgwfJq3lhPPRu3lwxiCMQ+VRPwnFy+Dr334GVF9p2MuPsJeG61Gy1M1wzPCNog=="
     ], 
     "./setup.py": [
         "FHmcENehlaNnGbvB7fwcXK/cn48qu7tbKP7T7jVVPwulqCBGtyhKFJjmO7cwrQqTM3lIP2SM0gOkL/j4NkZdPw=="
@@ -80,11 +80,15 @@
     "./test/baddata.json": [], 
     "./test/data.json": [], 
     "./test/sample dataflow.py": [], 
+    "./test/small_tools.py": [], 
     "./test/test_eval_script.py": [], 
     "./test/test_json_tools.py": [], 
     "./test/test_oa_server.py": [], 
     "./test/test_oa_server_file.py": [], 
     "./test/test_oa_server_rest.py": [], 
+    "./tox.ini": [
+        "AsrZfkAGxXOSiEdKC8Sjaw0jtePingo8wyaKUh/Tmfopb76SS+zoEO7rIQtsN6LENPqdcGt/EBuM0oQrkSPrYQ=="
+    ], 
     "./try/oacpp/.sconsign.dblite": [], 
     "./try/oacpp/AUTHORS.txt": [], 
     "./try/oacpp/ChangeLog.txt": [], 

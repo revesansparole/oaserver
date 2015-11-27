@@ -1,29 +1,26 @@
 import json
 from nose.tools import assert_raises, with_setup
-from os import mkdir, remove
+from os import remove
 from os.path import exists
 from os.path import join as pj
 import requests_mock
-from shutil import rmtree
 
 from oaserver.json_tools import get_json, post_json, wait_for_file
 from oaserver.oa_server_file import OAServerFile
 
+from .small_tools import ensure_created, rmdir
 
 tmp_dir = "takapouet_oasfile"
 wdir = pj(tmp_dir, "watch")
 
 
 def setup_func():
-    if not exists(tmp_dir):
-        mkdir(tmp_dir)
-    if not exists(wdir):
-        mkdir(wdir)
+    ensure_created(tmp_dir)
+    ensure_created(wdir)
 
 
 def teardown_func():
-    if exists(tmp_dir):
-        rmtree(tmp_dir)
+    rmdir(tmp_dir)
 
 
 def test_server_watch_path_exists():

@@ -1,27 +1,23 @@
 import json
 from nose.tools import assert_raises, with_setup
-from os import mkdir
 from os.path import exists
 from os.path import join as pj
-from shutil import rmtree
 import requests_mock
 from urllib2 import URLError
 
-
 from oaserver.json_tools import get_json, parse_url, post_json
 
+from .small_tools import ensure_created, rmdir
 
 tmp_dir = "takapouet_json"
 
 
 def setup_func():
-    if not exists(tmp_dir):
-        mkdir(tmp_dir)
+    ensure_created(tmp_dir)
 
 
 def teardown_func():
-    if exists(tmp_dir):
-        rmtree(tmp_dir)
+    rmdir(tmp_dir)
 
 
 def test_parse_url_parse_url():

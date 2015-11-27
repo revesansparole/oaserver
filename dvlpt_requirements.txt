@@ -1,10 +1,12 @@
 # {{pkglts pysetup.dvlpt_requirements,
+tox
 twine
 github3.py
 lice
 nose
 coverage
 mock
+flake8
 
 # }}
 

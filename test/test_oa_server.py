@@ -1,27 +1,23 @@
 import json
 from nose.tools import assert_raises, with_setup
-from os import mkdir
-from os.path import exists
 from os.path import join as pj
 import requests_mock
-from shutil import rmtree
 from time import sleep
 
 from oaserver.json_tools import get_json, URLError
 from oaserver.oa_server import OAServer
 
+from .small_tools import ensure_created, rmdir
 
 tmp_dir = "takapouet_compute"
 
 
 def setup_func():
-    if not exists(tmp_dir):
-        mkdir(tmp_dir)
+    ensure_created(tmp_dir)
 
 
 def teardown_func():
-    if exists(tmp_dir):
-        rmtree(tmp_dir)
+    rmdir(tmp_dir)
 
 
 def test_server_id_can_be_anything():
