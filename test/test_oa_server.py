@@ -2,9 +2,9 @@ import json
 from nose.tools import assert_raises, with_setup
 from os.path import join as pj
 import requests_mock
-from time import sleep
+# from time import sleep
 
-from oaserver.json_tools import get_json, URLError
+from oaserver.json_tools import get_json
 from oaserver.oa_server import OAServer
 
 from .small_tools import ensure_created, rmdir
@@ -54,6 +54,7 @@ def test_server_ping():
     oas = OAServer("toto")
 
     def text_callback(request, context):
+        del context
         resp = request.json()
         assert resp['id'] == "toto"
         assert resp['state'] == oas.state()
@@ -76,7 +77,6 @@ def test_server_compute_argument_definition():
         assert_raises(UserWarning, lambda: oas.compute(workflow,
                                                        url_data,
                                                        url_return))
-
 
     # workflow argument
     # completely wrong definition
@@ -126,7 +126,9 @@ def test_server_compute_use_local_in_data():
 
     with open(data_url, 'w') as f:
         json.dump({'a': 3}, f)
-    oas.compute("pycode:def main(a): return a", "file:%s" % data_url, result_url)
+    oas.compute("pycode:def main(a): return a",
+                "file:%s" % data_url,
+                result_url)
     assert get_json(result_url) == dict(id='oas', result=3)
 
 
@@ -158,6 +160,7 @@ def test_server_compute_is_working():
     oas.registered()
 
     def text_callback(request, context):
+        del context
         resp = json.loads(request.text)
         assert resp["id"] == "toto"
 

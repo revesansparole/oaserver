@@ -12,7 +12,7 @@ import urlparse
 import web
 
 
-def wait_for_file(pth, nb_cycles = 5):
+def wait_for_file(pth, nb_cycles=5):
     """ Wait for the creation of a file a given number of cycles.
     Then if file still not created raise UserWarning
 
@@ -29,7 +29,7 @@ def wait_for_file(pth, nb_cycles = 5):
     raise UserWarning("file not created")
 
 
-def wait_for_content(pth, nb_cycles = 5):
+def wait_for_content(pth, nb_cycles=5):
     """ Wait for a file to appear, read its content
     then remove it.
 

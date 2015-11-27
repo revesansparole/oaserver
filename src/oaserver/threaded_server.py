@@ -5,7 +5,7 @@ Helper module for creating servers
 
 import threading
 import web
-from web.httpserver import WSGIServer, StaticMiddleware, LogMiddleware
+from web.httpserver import WSGIServer, StaticMiddleware
 
 
 class ThreadedServer(threading.Thread):
@@ -21,15 +21,11 @@ class ThreadedServer(threading.Thread):
         app = web.application(matching, namespace)
         func = app.wsgifunc()
         func = StaticMiddleware(func)
-        # func = LogMiddleware(func)
 
         self.server = WSGIServer((address, port), func)
 
     def run(self):
-        # if self.server.ssl_adapter:
-        #     print "\nlaunched: https://%s:%d/" % (self.address, self.port)
-        # else:
-        print "\nlaunched: http://%s:%d/" % (self.address, self.port)
+        print("\nlaunched: http://%s:%d/" % (self.address, self.port))
         self.server.start()
 
     def stop(self):
