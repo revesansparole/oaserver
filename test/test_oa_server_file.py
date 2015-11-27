@@ -5,7 +5,7 @@ from os.path import exists
 from os.path import join as pj
 import requests_mock
 
-from oaserver.json_tools import get_json, post_json, wait_for_file
+from oaserver.json_tools import get_json, post_json, wait_for_content
 from oaserver.oa_server_file import OAServerFile
 
 from .small_tools import ensure_created, rmdir
@@ -92,7 +92,7 @@ def test_server_ping():
 
     post_json(ping_pth, dict(url=answer_file))
 
-    ans = get_json(wait_for_file(answer_file))
+    ans = wait_for_content(answer_file)
     assert ans['state'] == 'waiting'
     assert ans['id'] == "doofus"
 
@@ -117,7 +117,7 @@ def test_server_compute():
                             urldata="a = 1",
                             urlreturn=answer_file))
 
-    ans = get_json(wait_for_file(answer_file))
+    ans = wait_for_content(answer_file)
     assert ans['result'] == 1
     assert ans['id'] == "doofus"
 
@@ -135,8 +135,7 @@ def test_server_delete():
     oas.start()
     oas.register(answer_file)
 
-    del_pth = get_json(answer_file)['args']['urldelete']
-    remove(answer_file)
+    del_pth = wait_for_content(answer_file)['args']['urldelete']
 
     post_json(del_pth, dict())
 
@@ -162,10 +161,10 @@ def test_server_full_life():
     oas.start()
     oas.register(answer_file)
 
-    cpt_pth = get_json(answer_file)['args']['url']
-    ping_pth = get_json(answer_file)['args']['urlping']
-    del_pth = get_json(answer_file)['args']['urldelete']
-    remove(answer_file)
+    ans = wait_for_content(answer_file)
+    cpt_pth = ans['args']['url']
+    ping_pth = ans['args']['urlping']
+    del_pth = ans['args']['urldelete']
 
     for a in (1, 2):
         post_json(cpt_pth, dict(workflow="pycode:" + pycode,
@@ -174,20 +173,17 @@ def test_server_full_life():
 
         answer_ping = pj(tmp_dir, "answer_ping.json")
         post_json(ping_pth, dict(url=answer_ping))
-        ans = get_json(wait_for_file(answer_ping))
-        remove(answer_ping)
+        ans = wait_for_content(answer_ping)
         assert ans['id'] == "doofus"
         assert ans['state'] == 'running'
 
-        ans = get_json(wait_for_file(answer_file))
-        remove(answer_file)
+        ans = wait_for_content(answer_file)
         assert ans['result'] == a
         assert ans['id'] == "doofus"
 
         answer_ping = pj(tmp_dir, "answer_ping.json")
         post_json(ping_pth, dict(url=answer_ping))
-        ans = get_json(wait_for_file(answer_ping))
-        remove(answer_ping)
+        ans = wait_for_content(answer_ping)
         assert ans['id'] == "doofus"
         assert ans['state'] == 'waiting'
 

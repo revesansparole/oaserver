@@ -55,9 +55,7 @@ def test_wait_for_file_return_only_when_file_is_closed():
     t.start()
     assert wait_for_file(tmp_file) == pj(tmp_dir, "toto.txt")
     with open(tmp_file, 'r') as f:
-        txt = f.read()
-        print txt
-        assert txt == "beforeafter"
+        assert f.read() == "beforeafter"
 
 
 @with_setup(setup_func, teardown_func)
