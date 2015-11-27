@@ -3,9 +3,12 @@ from nose.tools import assert_raises, with_setup
 from os.path import exists
 from os.path import join as pj
 import requests_mock
+from threading import Timer
+from time import sleep
 from urllib2 import URLError
 
-from oaserver.json_tools import get_json, parse_url, post_json
+from oaserver.json_tools import (get_json, parse_url, post_json,
+                                 wait_for_content, wait_for_file)
 
 from .small_tools import ensure_created, rmdir
 
@@ -18,6 +21,58 @@ def setup_func():
 
 def teardown_func():
     rmdir(tmp_dir)
+
+
+@with_setup(setup_func, teardown_func)
+def test_wait_for_file_raise_error_if_no_file_created():
+    assert_raises(UserWarning, lambda: wait_for_file(pj(tmp_dir, "tutu.txt")))
+
+
+@with_setup(setup_func, teardown_func)
+def test_wait_for_file_return_when_file_created():
+    tmp_file = pj(tmp_dir, "toto.txt")
+
+    def cr_file():
+        with open(tmp_file, 'w') as f:
+            f.write("")
+
+    t = Timer(0.3, cr_file)
+    t.start()
+    assert wait_for_file(tmp_file) == pj(tmp_dir, "toto.txt")
+
+
+@with_setup(setup_func, teardown_func)
+def test_wait_for_file_return_only_when_file_is_closed():
+    tmp_file = pj(tmp_dir, "toto.txt")
+
+    def cr_file():
+        with open(tmp_file, 'w') as f:
+            f.write("before")
+            sleep(0.2)
+            f.write("after")
+
+    t = Timer(0.2, cr_file)
+    t.start()
+    assert wait_for_file(tmp_file) == pj(tmp_dir, "toto.txt")
+    with open(tmp_file, 'r') as f:
+        txt = f.read()
+        print txt
+        assert txt == "beforeafter"
+
+
+@with_setup(setup_func, teardown_func)
+def test_wait_for_content_remove_file_after_reading():
+    tmp_file = pj(tmp_dir, "toto.json")
+
+    def cr_file():
+        with open(tmp_file, 'w') as f:
+            json.dump("toto", f)
+            f.close()
+
+    t = Timer(0.3, cr_file)
+    t.start()
+    assert wait_for_content(tmp_file) == "toto"
+    assert not exists(tmp_file)
 
 
 def test_parse_url_parse_url():

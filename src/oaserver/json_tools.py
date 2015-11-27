@@ -3,13 +3,36 @@
 
 import json
 from os import remove
-from os.path import exists
+from os.path import abspath, exists
+import psutil
 import requests
 from requests.exceptions import ConnectionError, InvalidSchema
 from time import sleep
 from urllib2 import URLError
 import urlparse
 import web
+
+
+def file_still_in_use(pth):
+    """Test whether a file is still used by the system.
+
+    args:
+     - pth (str): path of file to check
+
+    return:
+     - (bool)
+    """
+    full_pth = abspath(pth)
+    for proc in psutil.process_iter():
+        if proc.name().lower() == "python.exe":
+            try:
+                for handle in proc.open_files():
+                    if handle.path == full_pth:
+                        return True
+            except psutil.AccessDenied:
+                pass
+
+    return False
 
 
 def wait_for_file(pth, nb_cycles=5):
@@ -21,7 +44,7 @@ def wait_for_file(pth, nb_cycles=5):
      - nb_cycles (int): number of try before raising error
     """
     for i in range(nb_cycles):
-        if exists(pth):
+        if exists(pth) and not file_still_in_use(pth):
             return pth
 
         sleep(0.1)

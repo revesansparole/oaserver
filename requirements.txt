@@ -2,6 +2,7 @@
 
 
 # }}
+psutil
 requests
 watchdog
 web.py
