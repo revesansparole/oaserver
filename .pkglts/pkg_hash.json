@@ -122,5 +122,7 @@
     "./try/oacpp/src/wrapper/SConscript": [], 
     "./try/oacpp/src/wrapper/SConscript~": [], 
     "./try/oacpp/src/wrapper/code_wrapper.cpp": [], 
-    "./try/oacpp/src/wrapper/code_wrapper.cpp~": []
+    "./try/oacpp/src/wrapper/code_wrapper.cpp~": [], 
+    "./try/toto.txt": [], 
+    "./try/try psutil.py": []
 }

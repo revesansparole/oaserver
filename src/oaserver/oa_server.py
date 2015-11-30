@@ -117,11 +117,10 @@ class OAServer(object):
                     "result": result}
 
             post_json(url_return, data)
-            # Reset state
-            self._state = "waiting"
         except (URLError, UserWarning, ValueError) as e:
-            self._state = "waiting"
             raise UserWarning(e)
+        finally:
+            self._state = "waiting"
 
     def delete(self):
         """ Invalidate this server

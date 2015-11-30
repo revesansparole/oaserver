@@ -2,9 +2,9 @@
 """
 
 import json
-from os import remove
-from os.path import abspath, exists
-import psutil
+from os import remove, utime
+from os.path import abspath, dirname, exists
+from os.path import join as pj
 import requests
 from requests.exceptions import ConnectionError, InvalidSchema
 from time import sleep
@@ -13,29 +13,100 @@ import urlparse
 import web
 
 
-def file_still_in_use(pth):
-    """Test whether a file is still used by the system.
+lock_file = "lock.lock"
+
+
+def is_lock(pth):
+    """Tests whether a lock is in place for this path.
+    """
+    return exists(pj(dirname(pth), lock_file))
+
+
+def acquire_lock(pth):
+    """Wait for lock to be free and acquire it.
+
+    look after a lock.lock file in dname
 
     args:
-     - pth (str): path of file to check
+     - pth (str): file to protect, will put a lock file in the same dir
+    """
+    dname = dirname(pth)
+    while is_lock(pth):
+        sleep(0.1)
+
+    with open(pj(dname, lock_file), 'w'):
+        utime(pj(dname, lock_file), None)
+
+
+def release_lock(pth):
+    """Release a previously acquired lock.
+
+    delete lock.lock file in dname
+
+    args:
+     - pth (str): file to protect, will put a lock file in the same dir
+    """
+    dname = dirname(pth)
+    remove(pj(dname, lock_file))
+
+
+def safe_read(pth):
+    """Safely read a file as a single process unit.
+
+    args:
+     - pth (str): path to file to read
 
     return:
-     - (bool)
+     - (str)
     """
-    full_pth = abspath(pth)
-    for proc in psutil.process_iter():
-        if proc.name().lower() == "python.exe":
-            try:
-                for handle in proc.open_files():
-                    if handle.path == full_pth:
-                        return True
-            except psutil.AccessDenied:
-                pass
+    acquire_lock(pth)
+    try:
+        with open(pth, 'r') as f:
+            txt = f.read()
+    finally:
+        release_lock(pth)
 
-    return False
+    return txt
 
 
-def wait_for_file(pth, nb_cycles=5):
+def safe_write(pth, txt):
+    """Safely write a file as a single process unit.
+
+    args:
+     - pth (str): path to file to read
+     - txt (str): content to write
+    """
+    acquire_lock(pth)
+    try:
+        with open(pth, 'w') as f:
+            f.write(txt)
+    finally:
+        release_lock(pth)
+
+
+# def file_still_in_use(pth):
+#     """Test whether a file is still used by the system.
+#
+#     args:
+#      - pth (str): path of file to check
+#
+#     return:
+#      - (bool)
+#     """
+#     full_pth = abspath(pth)
+#     for proc in psutil.process_iter():
+#         if proc.name().lower() == "python.exe":
+#             try:
+#                 for handle in proc.open_files():
+#                     if handle.path == full_pth:
+#                         return True
+#             except psutil.AccessDenied:
+#                 pass
+#
+#     return False
+
+
+def _wait_for_file(pth, nb_cycles=5):
     """ Wait for the creation of a file a given number of cycles.
     Then if file still not created raise UserWarning
 
@@ -44,7 +115,7 @@ def wait_for_file(pth, nb_cycles=5):
      - nb_cycles (int): number of try before raising error
     """
     for i in range(nb_cycles):
-        if exists(pth) and not file_still_in_use(pth):
+        if exists(pth) and not is_lock(pth):
             return pth
 
         sleep(0.1)
@@ -64,7 +135,7 @@ def wait_for_content(pth, nb_cycles=5):
     return:
      - (any): any data stored in pth in json format
     """
-    wait_for_file(pth, nb_cycles)
+    _wait_for_file(pth, nb_cycles)
     cnt = get_json(pth)
     remove(pth)
     return cnt
@@ -102,8 +173,7 @@ def get_json(url):
 
     if url.netloc == '':
         try:
-            with open(url.path, 'r') as f:
-                txt = f.read()
+            txt = safe_read(url.path)
         except IOError as e:
             raise URLError(e)
     else:
@@ -130,15 +200,15 @@ def post_json(url, data):
     if type(url) == str or type(url) == unicode:
         url = parse_url(url)
 
+    txt = json.dumps(data)
     if url.netloc == '':
         try:
-            with open(url.path, 'w') as f:
-                json.dump(data, f)
+            safe_write(url.path, txt)
         except IOError as e:
             raise URLError(e)
     else:
         try:
-            ret = requests.post(url.geturl(), json.dumps(data),
+            ret = requests.post(url.geturl(), txt,
                                 headers={'content-type': 'application/json'})
             if ret.status_code > 400:
                 raise URLError("unable to send data")

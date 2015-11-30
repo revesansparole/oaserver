@@ -7,8 +7,10 @@ from threading import Timer
 from time import sleep
 from urllib2 import URLError
 
-from oaserver.json_tools import (get_json, parse_url, post_json,
-                                 wait_for_content, wait_for_file)
+from oaserver.json_tools import (acquire_lock, get_json, is_lock, parse_url,
+                                 post_json, release_lock,
+                                 safe_read, safe_write,
+                                 wait_for_content)
 
 from .small_tools import ensure_created, rmdir
 
@@ -24,38 +26,76 @@ def teardown_func():
 
 
 @with_setup(setup_func, teardown_func)
-def test_wait_for_file_raise_error_if_no_file_created():
-    assert_raises(UserWarning, lambda: wait_for_file(pj(tmp_dir, "tutu.txt")))
+def test_locking_mechanism():
+    pth = pj(tmp_dir, "toto.txt")
+    assert not is_lock(pth)
+    acquire_lock(pth)
+    assert is_lock(pth)
+    release_lock(pth)
+    assert not is_lock(pth)
 
 
 @with_setup(setup_func, teardown_func)
-def test_wait_for_file_return_when_file_created():
-    tmp_file = pj(tmp_dir, "toto.txt")
+def test_acquire_lock_wait_for_free_lock():
+    pth = pj(tmp_dir, "toto.txt")
+    assert not is_lock(pth)
+    acquire_lock(pth)
+
+    def re_lock():
+        release_lock(pth)
+
+    t = Timer(0.1, re_lock)
+    t.start()
+    acquire_lock(pth)
+    assert is_lock(pth)
+    release_lock(pth)
+    assert not is_lock(pth)
+
+
+@with_setup(setup_func, teardown_func)
+def test_safe_read_write_mechanism():
+    # short txt
+    txt = "lorem ipsum"
+    pth = pj(tmp_dir, "tutu.txt")
+    safe_write(pth, txt)
+    assert safe_read(pth) == txt
+
+    # long txt
+    txt *= 10000
+    pth = pj(tmp_dir, "tutu.txt")
+    safe_write(pth, txt)
+    assert safe_read(pth) == txt
+
+
+@with_setup(setup_func, teardown_func)
+def test_wait_for_content_raise_error_if_no_file_created():
+    assert_raises(UserWarning, lambda: wait_for_content(pj(tmp_dir, "tutu.txt")))
+
+
+@with_setup(setup_func, teardown_func)
+def test_wait_for_content_return_when_file_created():
+    tmp_file = pj(tmp_dir, "toto.json")
 
     def cr_file():
-        with open(tmp_file, 'w') as f:
-            f.write("")
+        post_json(tmp_file, "data")
 
-    t = Timer(0.3, cr_file)
+    t = Timer(0.1, cr_file)
     t.start()
-    assert wait_for_file(tmp_file) == pj(tmp_dir, "toto.txt")
+    assert wait_for_content(tmp_file) == "data"
 
 
 @with_setup(setup_func, teardown_func)
 def test_wait_for_file_return_only_when_file_is_closed():
-    tmp_file = pj(tmp_dir, "toto.txt")
+    tmp_file = pj(tmp_dir, "toto.json")
+    big_data = dict((str(i), None) for i in range(10000))
+    # use big amount of data to slow down write process
 
     def cr_file():
-        with open(tmp_file, 'w') as f:
-            f.write("before")
-            sleep(0.2)
-            f.write("after")
+        post_json(tmp_file, big_data)
 
     t = Timer(0.2, cr_file)
     t.start()
-    assert wait_for_file(tmp_file) == pj(tmp_dir, "toto.txt")
-    with open(tmp_file, 'r') as f:
-        assert f.read() == "beforeafter"
+    assert wait_for_content(tmp_file) == big_data
 
 
 @with_setup(setup_func, teardown_func)
@@ -63,11 +103,9 @@ def test_wait_for_content_remove_file_after_reading():
     tmp_file = pj(tmp_dir, "toto.json")
 
     def cr_file():
-        with open(tmp_file, 'w') as f:
-            json.dump("toto", f)
-            f.close()
+        post_json(tmp_file, "toto")
 
-    t = Timer(0.3, cr_file)
+    t = Timer(0.1, cr_file)
     t.start()
     assert wait_for_content(tmp_file) == "toto"
     assert not exists(tmp_file)

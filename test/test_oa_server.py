@@ -20,6 +20,16 @@ def teardown_func():
     rmdir(tmp_dir)
 
 
+pycode = """
+from time import sleep
+
+def main(a):
+    print "pycode", a
+    sleep(a)
+    return a
+"""
+
+
 def test_server_id_can_be_anything():
     for sid in ("toto", 0, None):
         oas = OAServer(sid)
@@ -69,6 +79,7 @@ def test_server_ready_to_compute():
     assert_raises(AssertionError, lambda: oas.compute("toto", "data", "ret"))
 
 
+@with_setup(setup_func, teardown_func)
 def test_server_compute_argument_definition():
     oas = OAServer("oas")
     oas.registered()
@@ -78,30 +89,35 @@ def test_server_compute_argument_definition():
                                                        url_data,
                                                        url_return))
 
+    # working components
+    pyc = "pycode:def main():\n\tprint 1\n"
+    dat = "a = 1"
+    url_ret = pj(tmp_dir, "result.json")
+
     # workflow argument
     # completely wrong definition
-    ru("toto", "a=1", "http://return.com")
+    ru("toto", dat, url_ret)
 
     # bad pycode
-    ru("pycode:", "a=1", "http://return.com")
+    ru("pycode:", dat, url_ret)
 
     # bad dataflow
     # ru("dataflow:", "a=1", "http://return.com")
 
     # bad node id
-    ru("toto:", "a=1", "http://return.com")
-    ru(":toto", "a=1", "http://return.com")
+    ru("toto:", dat, url_ret)
+    ru(":toto", dat, url_ret)
 
     # url_data argument
-    ru("pycode:a=1", "code://data", "http://return.com")
-    ru("pycode:a=1", "file://data", "http://return.com")
+    ru(pyc, "code:data", url_ret)
+    ru(pyc, "file://data", url_ret)
     # ru("pycode:a=1", "http:data", "http://return.com")
 
     # url_return argument
-    ru("pycode:a=1", "a=1", "ret")
-    ru("pycode:a=1", "a=1", "file:ret")
-    ru("pycode:a=1", "a=1", "http:ret")
-    ru("pycode:a=1", "a=1", "http:/ret")
+    ru(pyc, dat, "ret")
+    ru(pyc, dat, "file:ret")
+    ru(pyc, dat, "http:ret")
+    ru(pyc, dat, "http:/ret")
 
 
 @with_setup(setup_func, teardown_func)
@@ -143,16 +159,6 @@ def test_server_compute_use_remote_in_data():
         m.get(data_url, text=json.dumps({'a': 4}))
         oas.compute("pycode:def main(a): return a", data_url, result_url)
         assert get_json(result_url) == dict(id='oas', result=4)
-
-
-pycode = """
-from time import sleep
-
-def main(a):
-    print "pycode", a
-    sleep(a)
-    return a
-"""
 
 
 def test_server_compute_is_working():
