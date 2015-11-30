@@ -13,6 +13,7 @@ from .small_tools import ensure_created, rmdir
 tmp_dir = "takapouet_oasfile"
 wdir = pj(tmp_dir, "watch")
 
+NB = 50
 
 def setup_func():
     ensure_created(tmp_dir)
@@ -92,7 +93,7 @@ def test_server_ping():
 
     post_json(ping_pth, dict(url=answer_file))
 
-    ans = wait_for_content(answer_file)
+    ans = wait_for_content(answer_file, NB)
     assert ans['state'] == 'waiting'
     assert ans['id'] == "doofus"
 
@@ -117,7 +118,7 @@ def test_server_compute():
                             urldata="a = 1",
                             urlreturn=answer_file))
 
-    ans = wait_for_content(answer_file)
+    ans = wait_for_content(answer_file, NB)
     assert ans['result'] == 1
     assert ans['id'] == "doofus"
 
@@ -135,7 +136,7 @@ def test_server_delete():
     oas.start()
     oas.register(answer_file)
 
-    del_pth = wait_for_content(answer_file)['args']['urldelete']
+    del_pth = wait_for_content(answer_file, NB)['args']['urldelete']
 
     post_json(del_pth, dict())
 
@@ -161,7 +162,7 @@ def test_server_full_life():
     oas.start()
     oas.register(answer_file)
 
-    ans = wait_for_content(answer_file)
+    ans = wait_for_content(answer_file, NB)
     cpt_pth = ans['args']['url']
     ping_pth = ans['args']['urlping']
     del_pth = ans['args']['urldelete']
@@ -173,17 +174,17 @@ def test_server_full_life():
 
         answer_ping = pj(tmp_dir, "answer_ping.json")
         post_json(ping_pth, dict(url=answer_ping))
-        ans = wait_for_content(answer_ping)
+        ans = wait_for_content(answer_ping, NB)
         assert ans['id'] == "doofus"
         assert ans['state'] == 'running'
 
-        ans = wait_for_content(answer_file)
+        ans = wait_for_content(answer_file, NB)
         assert ans['result'] == a
         assert ans['id'] == "doofus"
 
         answer_ping = pj(tmp_dir, "answer_ping.json")
         post_json(ping_pth, dict(url=answer_ping))
-        ans = wait_for_content(answer_ping)
+        ans = wait_for_content(answer_ping, NB)
         assert ans['id'] == "doofus"
         assert ans['state'] == 'waiting'
 
