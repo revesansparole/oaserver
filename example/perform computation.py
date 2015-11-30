@@ -6,7 +6,7 @@
 from os import mkdir
 from os.path import exists
 
-from oaserver.json_tools import get_json, wait_for_content
+from oaserver.json_tools import wait_for_content
 from oaserver.oa_server_file import OAServerFile
 
 com_dir = "com_dir"
@@ -29,7 +29,7 @@ delete_url = ans['args']['urldelete']
 #   perform computations
 #
 ####################################################################
-from oaserver.json_tools import post_json
+from oaserver.json_tools import get_json, post_json
 
 
 # directory to store results
