@@ -24,7 +24,7 @@ except OSError:
 
 call("virtualenv %s" % venv_dir, shell=True)
 
-execfile("%s/Scripts/activate_this.py" % venv_dir,
+execfile("%s/%s/activate_this.py" % (venv_dir, bin_dir),
          dict(__file__="%s/%s/activate_this.py" % (venv_dir, bin_dir)))
 
 # install requirements
