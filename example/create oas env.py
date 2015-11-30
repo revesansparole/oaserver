@@ -7,6 +7,11 @@ import sys
 
 venv_dir = "oaenv"
 
+if "win" in sys.platform:
+    bin_dir = "Scripts"
+else:
+    bin_dir = "bin"
+
 
 # create virtual env
 try:
@@ -20,7 +25,7 @@ except OSError:
 call("virtualenv %s" % venv_dir, shell=True)
 
 execfile("%s/Scripts/activate_this.py" % venv_dir,
-         dict(__file__="%s/Scripts/activate_this.py" % venv_dir))
+         dict(__file__="%s/%s/activate_this.py" % (venv_dir, bin_dir)))
 
 # install requirements
 reqs = ["openalea.container", "openalea.workflow", "oaserver"]
