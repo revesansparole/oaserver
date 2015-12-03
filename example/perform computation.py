@@ -59,7 +59,7 @@ for i in range(10):
     while state != 'waiting':
         cmd = dict(url="pingans.json")
         post_json(ping_url, cmd)
-        ans = wait_for_content("pingans.json")
+        ans = wait_for_content("pingans.json", 50)
         state = ans['state']
         print state
 

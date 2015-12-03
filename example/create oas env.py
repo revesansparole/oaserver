@@ -30,5 +30,5 @@ execfile("%s/%s/activate_this.py" % (venv_dir, bin_dir),
 # install requirements
 reqs = ["openalea.container", "openalea.workflow", "oaserver"]
 for name in reqs:
-    call("pip install %s" % name)
+    call("pip install %s" % name, shell=True)
 

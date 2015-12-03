@@ -6,7 +6,15 @@ print "deploy oaserver"
 from os import chdir, getcwd, mkdir
 from os.path import exists
 from os.path import join as pj
+import sys
 from zipfile import ZipFile
+
+
+if "win" in sys.platform:
+    bin_dir = "Scripts"
+else:
+    bin_dir = "bin"
+
 
 venv_dir = "venv_oas"
 if not exists(venv_dir):
@@ -23,7 +31,7 @@ execfile("relocate.py")
 chdir(cwd)
 
 # start virtual env
-act_script = pj(venv_dir, "Scripts", "activate_this.py")
+act_script = pj(venv_dir, bin_dir, "activate_this.py")
 execfile(act_script, dict(__file__=act_script))
 
 ####################################################################
