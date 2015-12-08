@@ -34,7 +34,7 @@ if not exists("res"):
 pycode = open("script_mini.py", 'r').read()
 
 # launch jobs
-for i in range(10):
+for i in range(3):
     oac.compute_script(pycode, dict(a=i), "res/computation%2d.json" % i)
 
     # wait for server to be ready using ping commands
