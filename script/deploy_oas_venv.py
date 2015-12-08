@@ -1,20 +1,20 @@
+from os import chdir, getcwd, mkdir
+from os.path import dirname, exists
+from os.path import join as pj
+from shutil import rmtree
+from subprocess import call
+import sys
+
+
+zip_name = sys.argv[1]
+venv_dir = dirname(zip_name)
+
 ####################################################################
 #
 print "deploy oaserver"
 #
 ####################################################################
-from os import chdir, getcwd, mkdir
-from os.path import exists
-from os.path import join as pj
-from zipfile import ZipFile
-
-venv_dir = "venv_oas"
-if not exists(venv_dir):
-    mkdir(venv_dir)
-
-# # extract archive into venv
-with ZipFile("oas.zip", 'r') as ziph:
-    ziph.extractall(venv_dir)
+call(["unzip", zip_name])
 
 # relocate venv
 cwd = getcwd()
@@ -39,7 +39,5 @@ execfile("perform computation.py")
 print "clean"
 #
 ####################################################################
-from shutil import rmtree
-
 if exists(venv_dir):
     rmtree(venv_dir)
