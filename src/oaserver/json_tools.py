@@ -123,7 +123,7 @@ def _wait_for_file(pth, nb_cycles=5):
     raise UserWarning("file not created")
 
 
-def wait_for_content(pth, nb_cycles=5):
+def wait_for_content(pth, nb_cycles=50):
     """ Wait for a file to appear, read its content
     then remove it.
 
