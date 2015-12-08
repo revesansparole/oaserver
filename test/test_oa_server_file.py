@@ -176,7 +176,7 @@ def test_server_full_life():
         post_json(ping_pth, dict(url=answer_ping))
         ans = wait_for_content(answer_ping, NB)
         assert ans['id'] == "doofus"
-        assert ans['state'] == 'running'
+        assert ans['state'] in ('running', 'waiting')
 
         ans = wait_for_content(answer_file, NB)
         assert ans['result'] == a
