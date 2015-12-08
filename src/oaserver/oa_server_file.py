@@ -59,7 +59,8 @@ class OAServerFile(FileSystemEventHandler):
         elif event.src_path == self._delete_pth:
             self.delete()
         else:
-            print "created", event.src_path
+            if event.src_path.split(".")[-1] != "lock":
+                print "created", event.src_path
 
     #########################################################################
     #
