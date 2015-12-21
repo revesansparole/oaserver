@@ -21,7 +21,7 @@
     }, 
     "landscape": {}, 
     "license": {
-        "name": "mit", 
+        "name": "CeCILL-C", 
         "organization": "OpenAlea", 
         "project": "oaserver", 
         "year": "2015"
@@ -51,6 +51,6 @@
     "version": {
         "major": 0, 
         "minor": 1, 
-        "post": 2
+        "post": 3
     }
 }

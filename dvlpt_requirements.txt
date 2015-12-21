@@ -1,9 +1,8 @@
 # {{pkglts pysetup.dvlpt_requirements,
 tox
 sphinx
-twine
 github3.py
-lice
+twine
 nose
 coverage
 mock

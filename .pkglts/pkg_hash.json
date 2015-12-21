@@ -2,7 +2,7 @@
     "./.coverage": [], 
     "./.coveragerc": [], 
     "./.gitignore": [
-        "0Kgn6jSwJAzZASIgRdsWj4/eDYyv8CtUFFs8K6zLWW6D0HddxSLWyqAK8OLfzDIryru4y2lNP/eT9RKVrkhA+Q=="
+        "Kn2lOmKMN+jefzJc3YLftmeAltG5xE+CwyhMsENJrqWpHFiqNVqsMM2l6MEBciyN5J9zyAsbdn6dcUyzRcw+jg=="
     ], 
     "./.landscape.yml": [], 
     "./.pypirc": [
@@ -16,10 +16,10 @@
     "./CONTRIBUTING.rst": [], 
     "./HISTORY.rst": [], 
     "./LICENSE": [
-        "/iB6sOFrygt2Cav5v6hhVzr0NETYAV75tpyvX60aj7ZQwyN7vHvM2L8LASn8L7op2uvtBV+4eO72YQhiUpYl6Q=="
+        "K+/cXPOoUd3kCV74oh3eAd4jEM1Zl5ycOadeYhk++UgVDTAptzaSeEuVaeT1wD8qp3mxw2UXkNVnXY9uD0bEtg=="
     ], 
     "./MANIFEST.in": [
-        "aoyFIXTlGGY/Zu4wL9B2Ukey9h96g2mnt8l86iNb8Bgm0guWzRlDOnTYpOyfF0eeTWd+4g8Aj1CnxPbE+lVXYQ=="
+        "Q4nA4FXbYqXa6HlLTaa07Ohu3tViE88MvpeIDjb9j75nTrszNOYTihGZfsNvjhQZo9lFHoZ8+SxU6Dz99tziXQ=="
     ], 
     "./README.rst": [
         "pCuL7sJcQ3V9cAwLUuZtpOV8FQsOWADmD26NsDU0Tqft+53/3xq7pU13gINrucmg/Ua2zNxskvuzntllxVLXWQ=="
@@ -38,42 +38,55 @@
     "./doc/readme.rst": [], 
     "./doc/usage.rst": [], 
     "./dvlpt_requirements.txt": [
-        "T8kwzO/cHSZBmG+c3d8pl+14iG1Nqkpx0J+OjA5kKIFk8CEb1A1ZjcEUEkExvopEc5Eb6a4UkNiWtHJg/+9l0g=="
+        "+0rCsgUH/i+KS0cdBXkd+wTjsLEKYPrCtkvYOwnMHfBQ6mPpCfYE3yGYotUl+B+IuTXSVKbL283hOpI+3DbwiA=="
     ], 
     "./entry_points.json": [], 
-    "./example/archivate oas.py": [], 
-    "./example/deploy oas.py": [], 
-    "./example/find_all_libs.py": [], 
-    "./example/lib_tools.py": [], 
-    "./example/perform computation.py": [], 
-    "./example/subpro.py": [], 
-    "./example/tuto.txt": [], 
+    "./example/__init__.py": [], 
+    "./example/job.py": [], 
+    "./example/old/34434857_OutputSandbox/34434857_OutputSandbox": [], 
+    "./example/old/34434857_OutputSandbox/res_bin.txt": [], 
+    "./example/old/34434857_OutputSandbox/res_cwd.txt": [], 
+    "./example/old/34434857_OutputSandbox/res_usrbin.txt": [], 
+    "./example/old/34434857_OutputSandbox/std.out": [], 
+    "./example/old/archivate oas.py": [], 
+    "./example/old/create oas env.py": [], 
+    "./example/old/deploy oas.py": [], 
+    "./example/old/find_all_libs.py": [], 
+    "./example/old/lib_tools.py": [], 
+    "./example/old/perform computation.py": [], 
+    "./example/old/subpro.py": [], 
+    "./example/old/tuto.txt": [], 
+    "./example/script_mini.py": [], 
+    "./example/script_scipy.py": [], 
     "./info.txt": [], 
     "./requirements.txt": [
         "AWuoxM/eZa+Zy1+ouKN+Lrc/SBs640mRZm3y4E/rbAOGZuvR7CtvYjlndWAzxwLd5fQj99R6tu0YJ/9TeDcx9w=="
     ], 
+    "./script/archivate_oas_venv.py": [], 
+    "./script/deploy_oas_locpy.py": [], 
+    "./script/deploy_oas_venv.py": [], 
     "./setup.cfg": [
         "+DyAbFPaeFRJXYRB5TmAjJI2EgwfJq3lhPPRu3lwxiCMQ+VRPwnFy+Dr334GVF9p2MuPsJeG61Gy1M1wzPCNog=="
     ], 
     "./setup.py": [
-        "FHmcENehlaNnGbvB7fwcXK/cn48qu7tbKP7T7jVVPwulqCBGtyhKFJjmO7cwrQqTM3lIP2SM0gOkL/j4NkZdPw=="
+        "BJ9JEH0vANrz7CWtibS+9bKcljKSQckJtPpGikt3HAJnArj320rImwqyefzwuQ8Yj+mXhWUwwQQBRHLZ+oe3xg=="
     ], 
     "./src/oaserver/__init__.py": [
         "bXi4YRtInDLkaTvGi4V/ZIZpKXGCIgIw/Qm7wX5YZ+tM5kkkAAGCzzuDhxJDzcpoWKBE1UxDj7mT+40YH1DZQA==", 
         "fIn+GWAvhWfY/9NV/Sw6VXI4UIvx1OTgGxXQ1U5+9JFQ4vhuETzkaQvz8W4M9rMDYlL0vAeRmP2p2DyMgcvb9A=="
     ], 
-    "./src/oaserver/arch_package.py": [], 
     "./src/oaserver/data_access.py": [
-        "Oheqd12RY7sfXYRsn4tbmQN6353s1KLafo1JAB0BgYkajyse/ybDmqOCMMEaDnN2sypEI4W3bbIysnED6AfYbw=="
+        "zfnT3nJTTgpF/xCUI9s5ang+ke0d/JUgV87qawHyFPBdTWYZPjWjHvAnrmK+q3hqtV8rMjNMxPulc7D2Hvodug=="
     ], 
     "./src/oaserver/eval_script.py": [], 
     "./src/oaserver/json_tools.py": [], 
+    "./src/oaserver/oa_client.py": [], 
     "./src/oaserver/oa_server.py": [], 
     "./src/oaserver/oa_server_file.py": [], 
     "./src/oaserver/oa_server_rest.py": [], 
     "./src/oaserver/threaded_server.py": [], 
     "./src/oaserver/version.py": [
-        "+bZW+G9+RmtV3On9zMd7cOQ0XevXGp0zQeOsCeIsaKsaqu6/gw5KxcPU2aBWtUJMHqMjAPNcbdebp+bRaQb1Rw=="
+        "q83IuuDdeRQUMsHgEgf7N3X1wklhZARk0+FW/aTj0rSSGGFIpD49/fo1vmZannT27UwrfMXliXw+KI/xkoxS1w=="
     ], 
     "./src/oaserver_data/__init__.py": [], 
     "./src/oaserver_data/relocate.py": [], 
@@ -90,6 +103,7 @@
     "./tox.ini": [
         "wiqIBNVHmXLTa1eDWbRbPIdlTQxOlH0qTNp/YSTanB7vDm3WI3mobeQ0xYerq0Hs67Pg9iV+D4QdlCHoJNwD+w=="
     ], 
+    "./try/conda/conda_deploy.sh": [], 
     "./try/oacpp/.sconsign.dblite": [], 
     "./try/oacpp/AUTHORS.txt": [], 
     "./try/oacpp/ChangeLog.txt": [], 
@@ -123,6 +137,9 @@
     "./try/oacpp/src/wrapper/SConscript~": [], 
     "./try/oacpp/src/wrapper/code_wrapper.cpp": [], 
     "./try/oacpp/src/wrapper/code_wrapper.cpp~": [], 
+    "./try/test_frgrid.py": [], 
+    "./try/test_ls.py": [], 
+    "./try/testjob.sh": [], 
     "./try/toto.txt": [], 
     "./try/try psutil.py": []
 }
