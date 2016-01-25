@@ -40,7 +40,6 @@
     "./dvlpt_requirements.txt": [
         "+0rCsgUH/i+KS0cdBXkd+wTjsLEKYPrCtkvYOwnMHfBQ6mPpCfYE3yGYotUl+B+IuTXSVKbL283hOpI+3DbwiA=="
     ], 
-    "./entry_points.json": [], 
     "./example/__init__.py": [], 
     "./example/job.py": [], 
     "./example/old/34434857_OutputSandbox/34434857_OutputSandbox": [], 
@@ -69,7 +68,7 @@
         "+DyAbFPaeFRJXYRB5TmAjJI2EgwfJq3lhPPRu3lwxiCMQ+VRPwnFy+Dr334GVF9p2MuPsJeG61Gy1M1wzPCNog=="
     ], 
     "./setup.py": [
-        "BJ9JEH0vANrz7CWtibS+9bKcljKSQckJtPpGikt3HAJnArj320rImwqyefzwuQ8Yj+mXhWUwwQQBRHLZ+oe3xg=="
+        "6SUD3UrjDth4pDc4PY9WV5vhhWUpOqqTIAfGEahoeH59SSLKQixKeeJhFQekYloq4/dA0RAtou36Z9Wq550eKA=="
     ], 
     "./src/oaserver/__init__.py": [
         "bXi4YRtInDLkaTvGi4V/ZIZpKXGCIgIw/Qm7wX5YZ+tM5kkkAAGCzzuDhxJDzcpoWKBE1UxDj7mT+40YH1DZQA==", 
@@ -103,7 +102,13 @@
     "./tox.ini": [
         "wiqIBNVHmXLTa1eDWbRbPIdlTQxOlH0qTNp/YSTanB7vDm3WI3mobeQ0xYerq0Hs67Pg9iV+D4QdlCHoJNwD+w=="
     ], 
-    "./try/conda/conda_deploy.sh": [], 
+    "./try/conda/cdeploy.sh": [], 
+    "./try/conda/cdeploy1.sh": [], 
+    "./try/conda/cdeploy2.sh": [], 
+    "./try/conda/cdeploy3.sh": [], 
+    "./try/conda/cdeploy4.sh": [], 
+    "./try/conda/job.py": [], 
+    "./try/conda/script_mini.py": [], 
     "./try/oacpp/.sconsign.dblite": [], 
     "./try/oacpp/AUTHORS.txt": [], 
     "./try/oacpp/ChangeLog.txt": [], 

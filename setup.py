@@ -66,11 +66,12 @@ setup(
     install_requires=parse_requirements("requirements.txt"),
     tests_require=parse_requirements("dvlpt_requirements.txt"),
     entry_points={
-        'console_scripts': [
-            'oaserver = oaserver.arch_package:main',
-        ],
+        # 'console_scripts': [
+        #       'fake_script = openalea.fakepackage.amodule:console_script', ],
+        # 'gui_scripts': [
+        #      'fake_gui = openalea.fakepackage.amodule:gui_script',],
+        #      'wralea': wralea_entry_points
     },
-
     keywords='',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
