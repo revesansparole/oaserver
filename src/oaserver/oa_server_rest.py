@@ -55,7 +55,7 @@ class OASDelete(object):
 class OAServerRest(ThreadedServer):
     """ REST front end for OA server
     """
-    def __init__(self, sid, oas_descr, sfws_descr):
+    def __init__(self, sid, address, port):
         """ Constructor
 
         args:
@@ -64,7 +64,6 @@ class OAServerRest(ThreadedServer):
          - sfws_descr (str,int): description of swf server to
                                  communicate with (address, port).
         """
-        address, port = oas_descr
         urls = ('/helloworld/', 'OASDefault',
                 '/compute/', 'OASCompute',
                 '/ping/', 'OASPing',
@@ -72,16 +71,17 @@ class OAServerRest(ThreadedServer):
         ThreadedServer.__init__(self, urls, globals(), address, port)
 
         oa_server.set_server_id(sid)
+        self.base_url = "http://%s:%d/" % (address, port)
 
+    def register(self, sfws_descr):
         # register
-        base_url = "http://%s:%d/" % oas_descr
         data = {"type": "RestSystemEngine",  # fixed name for SFW protocol
                 "args": {
                     "name": "OpenAlea",
-                    "id": sid,
-                    "url": base_url + "compute/",
-                    "urlping": base_url + "ping/",
-                    "urldelete": base_url + "delete/"}
+                    "id": oa_server.server_id(),
+                    "url": self.base_url + "compute/",
+                    "urlping": self.base_url + "ping/",
+                    "urldelete": self.base_url + "delete/"}
                 }
 
         url_register = "http://%s:%d/init/CreateEngine/" % sfws_descr
