@@ -73,7 +73,7 @@ class OAServerRest(ThreadedServer):
         oa_server.set_server_id(sid)
         self.base_url = "http://%s:%d/" % (address, port)
 
-    def register(self, sfws_descr):
+    def register(self, url):
         # register
         data = {"type": "RestSystemEngine",  # fixed name for SFW protocol
                 "args": {
@@ -84,10 +84,10 @@ class OAServerRest(ThreadedServer):
                     "urldelete": self.base_url + "delete/"}
                 }
 
-        url_register = "http://%s:%d/init/CreateEngine/" % sfws_descr
+        # url_register = "http://%s:%d/init/CreateEngine/" % sfws_descr
         try:
-            post_json(url_register, data)
+            post_json(url, data)
         except URLError:
-            raise UserWarning("unable to register with scifloware server")
+            raise UserWarning("unable to register with master server")
 
         oa_server.registered()
