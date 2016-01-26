@@ -5,11 +5,12 @@ from oaserver.oa_client_rest import OAClientRest
 #   launch oaserver
 #
 ####################################################################
-address = "193.49.108.153"
-# address = "10.0.14.242"
-# address = "127.0.0.1"
-# address = "147.99.24.168"
+sheldon = "193.49.108.153"
+mango = "193.49.108.148"
+sheldon_inra = "10.0.14.242"
+localhost = "127.0.0.1"
+modulor = "147.99.24.168"
 port = 6544
 
-oac = OAClientRest(address, port)
+oac = OAClientRest(sheldon, port)
 oac.start()
