@@ -1,18 +1,20 @@
+from sys import argv
 from oaserver.oa_server_rest import OAServerRest
+
+from ip_list import *
+
+if len(argv) == 1:
+    sid = "doofus"
+    port = 6543
+else:
+    port = int(argv[1])
+    sid = "doofus:%d" % port
 
 ####################################################################
 #
 #   launch oaserver
 #
 ####################################################################
-sheldon = "193.49.108.153"
-mango = "193.49.108.148"
-sheldon_inra = "10.0.14.242"
-localhost = "127.0.0.1"
-modulor = "147.99.24.168"
-port = 6543
-
-oas = OAServerRest("doofus", mango, port)
-print "registering"
-oas.register("http://%s:6544/register/" % sheldon)
+oas = OAServerRest(sid, localhost, port)
+oas.register("http://%s:6539/register/" % localhost)
 oas.start()

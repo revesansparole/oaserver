@@ -51,6 +51,7 @@ class OAServer(object):
          - url (url): url used to send response message
         """
         data = {"id": self._sid, "state": self._state}
+        print "ping", url
         post_json(url, data)
 
     def _compute(self, workflow, url_data):

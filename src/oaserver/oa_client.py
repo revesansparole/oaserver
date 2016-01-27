@@ -2,70 +2,40 @@
 with scifloware specifications to communicate with OAServers.
 """
 
-from os.path import exists
 from time import sleep
-
-from .json_tools import post_json, wait_for_content
 
 
 class OAClient(object):
-    """ object used to encapsulate communication with OA server
+    """ object used to encapsulate communication with OA router
     """
-    def __init__(self):
+    def __init__(self, router):
         """ Constructor
         """
-        self.compute_url = None
-        self.ping_url = None
-        self.delete_url = None
+        self._router = router
 
-    def connect(self, oas):
-        """Connect the client to a given OA server.
+        self._answer = None
 
-        args:
-         - oas (OAServer): server to connect to
-
-        return:
-         - (bool): whether connection is successful or not
-        """
-        oas.register("reg.json")
-        oas.start()
-
-        ans = wait_for_content("reg.json")
-        self.compute_url = ans['args']['url']
-        self.ping_url = ans['args']['urlping']
-        self.delete_url = ans['args']['urldelete']
-
-        return True
+    def set_answer(self, ans):
+        self._answer = ans
 
     def ping(self):
-        """Ping associated server and return server state.
+        """Poll all available OA servers for their current state
 
-        return:
-         - (str): current server state
+        Test function not hopefully useful
         """
-        cmd = dict(url="pingans.json")
-        post_json(self.ping_url, cmd)
-        ans = wait_for_content("pingans.json")
+        self._answer = None
+        self._router.servers_state(self)
+        while self._answer is None:
+            sleep(0.5)
 
-        return ans['state']
+        return self._answer
 
-    def compute_script(self, pycode, data, url_return):
-        """Launch execution of pycode on server.
-
-        .. note:: function return once computation is launched but not
-                  necessarily finished
-
-        args:
-         - pycode (str): python code to execute,
-                         must contain some main function
-         - data (dict of str, any): data to send to the script
-         - url_return (str): url where oas will write result of computation
+    def compute(self, pycode, data):
+        """Execute a script on OAS and wait for answer.
         """
-        data_str = "\n".join("%s = %s" % it for it in data.items())
-        cmd = dict(workflow="pycode:" + pycode,
-                   urldata=data_str,
-                   urlreturn=url_return)
-        post_json(self.compute_url, cmd)
+        self._answer = None
+        self._router.compute(self, pycode, data)
+        while self._answer is None:
+            sleep(0.5)
 
-        while exists(self.compute_url):
-            sleep(0.1)
+        return self._answer

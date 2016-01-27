@@ -211,7 +211,7 @@ def post_json(url, data):
             ret = requests.post(url.geturl(), txt,
                                 headers={'content-type': 'application/json'})
             if ret.status_code > 400:
-                raise URLError("unable to send data")
+                raise URLError("unable to send data: %s" % ret.status_code)
         except (ConnectionError, InvalidSchema) as e:
             raise URLError(e)
 

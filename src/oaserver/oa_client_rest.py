@@ -10,12 +10,12 @@ from .threaded_server import ThreadedServer
 class OAClient(object):
     """Client for OA server
     """
-    def __init__(self, address, port):
+    def __init__(self):
         """ Constructor
         """
-        self.address = address
-        self.port = port
-        self.base_url = "http://%s:%d/" % (address, port)
+        self.address = None
+        self.port = None
+        self.base_url = None
 
         self.server_id = None
         self.compute_url = None
@@ -23,6 +23,11 @@ class OAClient(object):
         self.delete_url = None
 
         self.ping_ans = None
+
+    def set_address(self, address, port):
+        self.address = address
+        self.port = port
+        self.base_url = "http://%s:%d/" % (address, port)
 
     def store_registration(self, registration):
         """Connect the client to a given OA server.
@@ -94,18 +99,11 @@ class OACRegister(object):
     """
     def POST(self):
         data = retrieve_json()
-        # data = {"type": "RestSystemEngine",  # fixed name for SFW protocol
-        #         "args": {
-        #             "name": "OpenAlea",
-        #             "id": oa_server.server_id(),
-        #             "url": self.base_url + "compute/",
-        #             "urlping": self.base_url + "ping/",
-        #             "urldelete": self.base_url + "delete/"}
-        #         }
         assert data["type"] == "RestSystemEngine"
 
-        args = data["args"]
-        print "register", args
+        regis = data["args"]
+        print "register", regis
+        oac.store_registration(regis)
 
 
 class OACPing(object):
@@ -113,7 +111,7 @@ class OACPing(object):
     """
     def POST(self):
         data = retrieve_json()
-        print "ping", data
+        oac.ping_ans = data
 
 
 class OAClientRest(ThreadedServer):
@@ -128,6 +126,8 @@ class OAClientRest(ThreadedServer):
          - sfws_descr (str,int): description of swf server to
                                  communicate with (address, port).
         """
+        oac.set_address(address, port)
+
         urls = ('/helloworld/', 'OACDefault',
                 '/register/', 'OACRegister',
                 '/ping/', 'OACPing')
