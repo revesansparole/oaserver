@@ -50,8 +50,8 @@ class OAServer(object):
         arg:
          - url (url): url used to send response message
         """
-        data = {"id": self._sid, "state": self._state}
         print "ping", url
+        data = {"id": self._sid, "state": self._state}
         post_json(url, data)
 
     def _compute(self, workflow, url_data):
@@ -107,6 +107,7 @@ class OAServer(object):
          - url_data (url): url of file to read to get data
          - url_return (url): url to use to send result
         """
+        print "compute", url_return
         assert self._state == "waiting"
         self._state = "running"
 

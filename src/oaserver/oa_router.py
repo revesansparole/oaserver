@@ -167,6 +167,7 @@ class OARouter(threading.Thread):
 
     def stop(self):
         for task in self._tasks:
+            task._answer = 0  # TODO for debug and test purpose only
             task.kill = True
 
         self._dispatch_messages = False
