@@ -6,7 +6,7 @@ from sys import argv
 
 from oaserver.oa_server_file import OAServerFile
 
-from ip_list import com_dir
+from ip_list import sheldon_com_dir as com_dir
 
 
 if len(argv) == 1:

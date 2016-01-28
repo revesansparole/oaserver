@@ -7,4 +7,5 @@ simon_lirmm = "193.49.108.145"
 simon_inra = "10.0.14.158"
 
 
-com_dir = "com_dir"
+sheldon_com_dir = "com_dir"
+frgrid_com_dir = "/vo.france-grilles.fr/user/j/jchopard"

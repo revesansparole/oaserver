@@ -4,7 +4,7 @@ from time import sleep
 
 from oaserver.oa_client_file import OAClientFile
 
-from ip_list import com_dir
+from ip_list import sheldon_com_dir as com_dir
 
 if not exists(com_dir):
     mkdir(com_dir)
