@@ -19,7 +19,6 @@ class WatchdogListener(object):
         Returns:
             (any)
         """
-        del name
         raise NotImplemented
 
 
@@ -41,7 +40,15 @@ class Watchdog(Thread):
         self._listener = listener
         self._running = False
 
-        self._current_content = set()
+        self._current_content = set(ls(pth))
+
+    def is_running(self):
+        """Check whether watchdog still running.
+
+        Returns:
+            (bool): True if watchdog stil running
+        """
+        return self._running
 
     def stop(self):
         """Force thread to stop.
@@ -52,16 +59,16 @@ class Watchdog(Thread):
         self._running = False
 
     def run(self):
-        """Main loop, keep checking directory for file creation
+        """Main loop, keep checking directory for file creation.
+
+        Warnings: do not call this method directly, use 'start' instead.
 
         Returns:
             Never
         """
-        if self._running:
-            raise UserWarning("Thread already launched")
-
         self._running = True
         while self._running:
+            print "alive", self._running
             current = set(ls(self._watched_pth))
             for name in current - self._current_content:
                 self._listener.file_created(name)
