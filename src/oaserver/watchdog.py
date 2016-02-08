@@ -1,20 +1,23 @@
 """Simple implementation of a watchdog
 """
 
+from os.path import join as pj
 from threading import Thread
 from time import sleep
 
-from .uos import ls
+from json_tools import get_json
+from .uos import ls, remove
 
 
 class WatchdogListener(object):
     """Interface for watchdog listener.
     """
-    def file_created(self, name):
+    def file_created(self, name, cnt):
         """Notified when a new file is created in the watched directory.
 
         Args:
             name: (str) name of new file
+            cnt: (any) json loaded content of file
 
         Returns:
             (any)
@@ -23,7 +26,8 @@ class WatchdogListener(object):
 
 
 class Watchdog(Thread):
-    """Watch after a given directory
+    """Watch after a given empty directory and call listener with the content
+    of every new created file.
     """
     def __init__(self, pth, listener):
         """Initialize watchdog
@@ -37,16 +41,25 @@ class Watchdog(Thread):
         """
         Thread.__init__(self)
         self._watched_pth = pth
+        if len(ls(pth)) > 0:
+            raise OSError("directory not empty")
+
         self._listener = listener
         self._running = False
 
-        self._current_content = set(ls(pth))
+    def watched_path(self):
+        """Fetch path watched by this dog.
+
+        Returns:
+            (str)
+        """
+        return self._watched_pth
 
     def is_running(self):
         """Check whether watchdog still running.
 
         Returns:
-            (bool): True if watchdog stil running
+            (bool): True if watchdog still running
         """
         return self._running
 
@@ -68,10 +81,10 @@ class Watchdog(Thread):
         """
         self._running = True
         while self._running:
-            print "alive", self._running
-            current = set(ls(self._watched_pth))
-            for name in current - self._current_content:
-                self._listener.file_created(name)
+            for name in ls(self._watched_pth):
+                pth = pj(self._watched_pth, name)
+                cnt = get_json(pth)
+                remove(pth)
+                self._listener.file_created(name, cnt)
 
-            self._current_content = current
             sleep(0.2)

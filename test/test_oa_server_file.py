@@ -1,6 +1,6 @@
 import json
 from nose.tools import assert_raises, with_setup
-from os import remove
+from os import listdir, remove
 from os.path import exists
 from os.path import join as pj
 import requests_mock
@@ -15,6 +15,7 @@ wdir = pj(tmp_dir, "watch")
 
 NB = 50
 
+
 def setup_func():
     ensure_created(tmp_dir)
     ensure_created(wdir)
@@ -25,7 +26,7 @@ def teardown_func():
 
 
 def test_server_watch_path_exists():
-    assert_raises(UserWarning, lambda: OAServerFile("doofus", "tooky"))
+    assert_raises(OSError, lambda: OAServerFile("doofus", "tooky"))
 
 
 @with_setup(setup_func, teardown_func)
@@ -47,12 +48,13 @@ def test_server_register_correctly_when_started_already():
     oas.start()
     oas.register(reg_file)
 
-    assert exists(reg_file)
+    res = [exists(reg_file)]
     reg = get_json(reg_file)
     for key in ('id', 'url', 'urlping', 'urldelete'):
-        assert key in reg['args']
+        res.append(key in reg['args'])
 
     oas.stop()
+    assert all(res)
 
 
 @with_setup(setup_func, teardown_func)
@@ -88,18 +90,19 @@ def test_server_ping():
     oas.start()
     oas.register(answer_file)
 
-    ping_pth = get_json(answer_file)['args']['urlping']
+    ping_pth = pj(wdir, get_json(answer_file)['args']['urlping'])
     remove(answer_file)
 
     post_json(ping_pth, dict(url=answer_file))
 
     ans = wait_for_content(answer_file, NB)
-    assert ans['state'] == 'waiting'
-    assert ans['id'] == "doofus"
+    res = [ans['state'] == 'waiting',
+           ans['id'] == "doofus"]
 
     oas.stop()
     oas.join()
 
+    assert all(res)
     assert not exists(ping_pth)
 
 
@@ -111,7 +114,7 @@ def test_server_compute():
     oas.start()
     oas.register(answer_file)
 
-    cpt_pth = get_json(answer_file)['args']['url']
+    cpt_pth = pj(wdir, get_json(answer_file)['args']['url'])
     remove(answer_file)
 
     post_json(cpt_pth, dict(workflow="pycode:def main(a): return a",
@@ -119,12 +122,13 @@ def test_server_compute():
                             urlreturn=answer_file))
 
     ans = wait_for_content(answer_file, NB)
-    assert ans['result'] == 1
-    assert ans['id'] == "doofus"
+    res = [ans['result'] == 1,
+           ans['id'] == "doofus"]
 
     oas.stop()
     oas.join()
 
+    assert all(res)
     assert not exists(cpt_pth)
 
 
@@ -136,7 +140,7 @@ def test_server_delete():
     oas.start()
     oas.register(answer_file)
 
-    del_pth = wait_for_content(answer_file, NB)['args']['urldelete']
+    del_pth = pj(wdir, wait_for_content(answer_file, NB)['args']['urldelete'])
 
     post_json(del_pth, dict())
 
@@ -163,10 +167,11 @@ def test_server_full_life():
     oas.register(answer_file)
 
     ans = wait_for_content(answer_file, NB)
-    cpt_pth = ans['args']['url']
-    ping_pth = ans['args']['urlping']
-    del_pth = ans['args']['urldelete']
+    cpt_pth = pj(wdir, ans['args']['url'])
+    ping_pth = pj(wdir, ans['args']['urlping'])
+    del_pth = pj(wdir, ans['args']['urldelete'])
 
+    res = []
     for a in (1, 2):
         post_json(cpt_pth, dict(workflow="pycode:" + pycode,
                                 urldata="a = %d" % a,
@@ -175,18 +180,18 @@ def test_server_full_life():
         answer_ping = pj(tmp_dir, "answer_ping.json")
         post_json(ping_pth, dict(url=answer_ping))
         ans = wait_for_content(answer_ping, NB)
-        assert ans['id'] == "doofus"
-        assert ans['state'] in ('running', 'waiting')
+        res.append(ans['id'] == "doofus")
+        res.append(ans['state'] in ('running', 'waiting'))
 
         ans = wait_for_content(answer_file, NB)
-        assert ans['result'] == a
-        assert ans['id'] == "doofus"
+        res.append(ans['result'] == a)
+        res.append(ans['id'] == "doofus")
 
         answer_ping = pj(tmp_dir, "answer_ping.json")
         post_json(ping_pth, dict(url=answer_ping))
         ans = wait_for_content(answer_ping, NB)
-        assert ans['id'] == "doofus"
-        assert ans['state'] == 'waiting'
+        res.append(ans['id'] == "doofus")
+        res.append(ans['state'] == 'waiting')
 
     post_json(del_pth, dict())
 

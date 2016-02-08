@@ -1,8 +1,8 @@
 """Generalize os package to remote locations.
 """
 
-from os import listdir
-from os.path import isdir, join
+import os
+from time import sleep
 
 
 def ls(pth):
@@ -15,8 +15,20 @@ def ls(pth):
         (list of str): list of filenames
     """
     names = []
-    for name in listdir(pth):
-        if not isdir(join(pth, name)):
+    for name in os.listdir(pth):
+        if not os.path.isdir(os.path.join(pth, name)):
             names.append(name)
 
     return names
+
+
+def remove(pth):
+    """Delete specified file.
+
+    Args:
+        pth: (str) path of file to delete
+
+    Returns:
+        None
+    """
+    os.remove(pth)
