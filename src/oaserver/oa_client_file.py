@@ -76,10 +76,18 @@ class OAClientFile(object):
         raise UserWarning("server down")
 
     def compute(self, pycode, data):
-        """Launch a script on server
+        """Launch a script on server.
 
-        args:
-         - timeout (int): default 10, max number of seconds to wait for answer
+        Notes: this function launch computation and does not wait for an answer.
+               You need to ping server until state == 'waiting' and then call
+               get_result.
+
+        Args:
+            pycode: (str) python code
+            data: (dict) keyword arguments for script
+
+        Returns:
+            (None)
         """
         if self._sid is None:
             raise UserWarning("No registered server, connect first???")
@@ -96,6 +104,11 @@ class OAClientFile(object):
         post_json(self._compute_pth, cmd)
 
     def get_result(self):
+        """Fetch result of a computation.
+
+        Returns:
+            (any) actual result of script call
+        """
         res_pth = pj(self._stdout, "result.json")
         if not exists(res_pth):
             raise UserWarning("Computation still running????")
@@ -104,3 +117,12 @@ class OAClientFile(object):
         remove(res_pth)
         assert res['id'] == self._sid
         return res['result']
+
+    def kill_server(self):
+        """Kill associated server.
+        """
+        if self._sid is None:
+            raise UserWarning("No registered server, connect first???")
+
+        cmd = dict()
+        post_json(self._delete_pth, cmd)
