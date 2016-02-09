@@ -10,7 +10,6 @@ from requests.exceptions import ConnectionError, InvalidSchema
 from time import sleep
 from urllib2 import URLError
 import urlparse
-import web
 
 
 lock_file = "lock.lock"

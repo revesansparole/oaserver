@@ -111,39 +111,6 @@ def test_wait_for_content_remove_file_after_reading():
     assert not exists(tmp_file)
 
 
-def test_parse_url_parse_url():
-    url = parse_url("http://domain.com/dir/file.txt")
-    assert url.scheme == "http"
-    assert url.netloc == "domain.com"
-    assert url.path == "/dir/file.txt"
-
-
-def test_parse_url_default_scheme_is_file():
-    url = parse_url("dir/file.txt")
-    assert url.scheme == 'file'
-    assert url.netloc == ''
-    assert url.path == "dir/file.txt"
-
-
-def test_parse_url_handle_unknown_scheme():
-    url = parse_url("code:dir/file.txt")
-    assert url.scheme == 'code'
-    assert url.netloc == ''
-    assert url.path == "dir/file.txt"
-
-
-def test_parse_url_change_default_scheme():
-    url = parse_url("a = 1", 'code')
-    assert url.scheme == 'code'
-    assert url.path == "a = 1"
-
-
-def test_parse_url_secure_code():
-    url = parse_url("s = 'toto/toto.txt'", 'code')
-    assert url.scheme == 'code'
-    assert url.path == "s = 'toto/toto.txt'"
-
-
 @with_setup(setup_func, teardown_func)
 def test_get_json_local_raise_error_if_no_file():
     assert_raises(URLError, lambda: get_json(pj(tmp_dir, "toto.tutu")))
