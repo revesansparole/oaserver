@@ -4,7 +4,8 @@
 import threading
 
 from .oa_server import OAServer
-from .json_tools import post_json, URLError
+from .json_tools import post_json
+from .uos import URLError
 from .watchdog import Watchdog, WatchdogListener
 
 

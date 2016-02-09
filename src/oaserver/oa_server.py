@@ -5,7 +5,8 @@ with scifloware specifications.
 # from eval_dataflow import eval_dataflow
 # from eval_node import eval_node
 from .eval_script import eval_script
-from .json_tools import get_json, parse_url, post_json, URLError
+from .json_tools import get_json, post_json
+from .uos import ensure_url, URLError
 
 
 class OAServer(object):
@@ -67,7 +68,7 @@ class OAServer(object):
 
     def _compute(self, workflow, url_data):
         # analyse url_data argument
-        url_data = parse_url(url_data, 'code')
+        url_data = ensure_url(url_data, 'code')
         if url_data.scheme == 'code':
             ast = compile(url_data.path, "<rem str>", 'exec')
             data = {}

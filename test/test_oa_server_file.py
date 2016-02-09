@@ -83,6 +83,31 @@ def test_server_register_raise_error_if_not_registering():
 
 
 @with_setup(setup_func, teardown_func)
+def test_server_do_not_react_to_unknown_files():
+    answer_file = pj(tmp_dir, "answer.json")
+
+    oas = OAServerFile("doofus", wdir)
+    oas.start()
+    oas.register(answer_file)
+
+    post_json(pj(wdir, "takapouet.cmd"), dict(a=1))
+
+    ping_pth = pj(wdir, get_json(answer_file)['args']['urlping'])
+    remove(answer_file)
+
+    post_json(ping_pth, dict(url=answer_file))
+
+    ans = wait_for_content(answer_file, NB)
+    res = [ans['state'] == 'waiting',
+           ans['id'] == "doofus"]
+
+    oas.stop()
+    oas.join()
+
+    assert all(res)
+
+
+@with_setup(setup_func, teardown_func)
 def test_server_ping():
     answer_file = pj(tmp_dir, "answer.json")
 
