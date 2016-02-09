@@ -7,6 +7,8 @@ from requests.exceptions import ConnectionError, InvalidSchema
 from urllib2 import URLError
 import urlparse
 
+import dirac_api
+
 
 def ensure_url(url, default_scheme='file'):
     """Ensure url argument is a valid url
@@ -29,33 +31,49 @@ def ensure_url(url, default_scheme='file'):
     return urlparse.SplitResult(scheme, netloc, path, query, fragment)
 
 
-def ls(pth):
+def ls(url):
     """List all files at a given location.
 
     Args:
-        pth: (str) path to check
+        url: (url) path to check
 
     Returns:
         (list of str): list of file names
     """
-    names = []
-    for name in os.listdir(pth):
-        if not os.path.isdir(os.path.join(pth, name)):
-            names.append(name)
+    url = ensure_url(url)
 
-    return names
+    if url.netloc != "":
+        raise UserWarning("don't know how to handle web ls")
+
+    if url.scheme == "dirac":
+        return dirac_api.ls(url)
+    else:
+        names = []
+        for name in os.listdir(url.path):
+            if not os.path.isdir(os.path.join(url.path, name)):
+                names.append(name)
+
+        return names
 
 
-def remove(pth):
+def remove(url):
     """Delete specified file.
 
     Args:
-        pth: (str) path of file to delete
+        url: (url) path of file to delete
 
     Returns:
         None
     """
-    os.remove(pth)
+    url = ensure_url(url)
+
+    if url.netloc != "":
+        raise UserWarning("don't know how to handle web ls")
+
+    if url.scheme == "dirac":
+        return dirac_api.remove(url)
+    else:
+        os.remove(url.path)
 
 
 def get(src, dst):
@@ -74,11 +92,17 @@ def get(src, dst):
     """
     src = ensure_url(src)
     if src.netloc == '':
-        try:
-            with open(src.path, 'rb') as f:
-                cnt = f.read()
-        except IOError as e:
-            raise URLError(e)
+        if src.scheme == "dirac":
+            return dirac_api.get(src, dst)
+        else:
+            try:
+                with open(src.path, 'rb') as f:
+                    cnt = f.read()
+
+                with open(dst, 'wb') as f:
+                    f.write(cnt)
+            except IOError as e:
+                raise URLError(e)
     else:
         try:
             resp = requests.get(src.geturl())
@@ -88,10 +112,8 @@ def get(src, dst):
         if resp.status_code >= 400:
             raise URLError("url does not exists")
 
-        cnt = resp.content
-
-    with open(dst, 'wb') as f:
-        f.write(cnt)
+        with open(dst, 'wb') as f:
+            f.write(resp.content)
 
 
 def put(src, dst):
@@ -110,17 +132,23 @@ def put(src, dst):
     """
     dst = ensure_url(dst)
 
-    with open(src, 'rb') as f:
-        cnt = f.read()
-
     if dst.netloc == '':
-        try:
-            with open(dst.path, 'wb') as f:
-                f.write(cnt)
-        except IOError as e:
-            raise URLError(e)
+        if dst.scheme == "dirac":
+            return dirac_api.put(src, dst)
+        else:
+            try:
+                with open(src, 'rb') as f:
+                    cnt = f.read()
+
+                with open(dst.path, 'wb') as f:
+                    f.write(cnt)
+            except IOError as e:
+                raise URLError(e)
     else:
         try:
+            with open(src, 'rb') as f:
+                cnt = f.read()
+
             ret = requests.post(dst.geturl(), cnt,
                                 headers={'content-type': 'application/json'})  # TODO sort this out
             if ret.status_code > 400:
