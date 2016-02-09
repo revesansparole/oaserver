@@ -6,6 +6,9 @@ from urllib2 import URLError
 from urlparse import SplitResult
 
 
+# TODO pb when calling with trailing /
+
+
 def ls(url):
     """List all available resources at the given location
 
@@ -30,10 +33,26 @@ def ls(url):
                 dname = os.path.dirname(pth)
                 if len(dname) == 0:
                     pths.add(pth)
-            else:
-                raise URLError("bad path")
+            # else:
+            #     raise URLError("bad path")
 
     return pths
+
+
+def _first_dir_component(pth):
+    """Find the upper dir component of a path.
+
+    Args:
+        pth: (str) path
+
+    Returns:
+        (str) on 'A/B/C/d.txt' will return A
+    """
+    dname, bname = os.path.split(pth)
+    if dname == "":
+        return bname
+    else:
+        return _first_dir_component(dname)
 
 
 def ls_dir(url):
@@ -59,7 +78,7 @@ def ls_dir(url):
                 pth = line[len(root):][1:]
                 dname = os.path.dirname(pth)
                 if len(dname) > 0:
-                    pths.add(pth)
+                    pths.add(_first_dir_component(pth))
             else:
                 raise URLError("bad path")
 

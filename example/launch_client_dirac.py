@@ -4,7 +4,7 @@ from oaserver.oa_client_file import OAClientFile
 
 from ip_list import dirac_com_dir as com_dir
 
-oac = OAClientFile("dirac:/%s" % com_dir)
+oac = OAClientFile("dirac:%s" % com_dir)
 con = oac.connect()
 print "con", con
 

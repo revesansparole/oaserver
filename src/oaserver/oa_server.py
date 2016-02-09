@@ -142,3 +142,4 @@ class OAServer(object):
         """Invalidate this server.
         """
         self._state = "deleted"
+        print "deleted", self._sid
