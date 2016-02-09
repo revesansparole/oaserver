@@ -12,45 +12,56 @@ class OAServer(object):
     """ object used to encapsulate communication with SFW server
     """
     def __init__(self, sid):
-        """ Constructor
+        """Constructor
 
-        args:
-         - sid (str): unique id for this server.
+        Args:
+            sid: (str) unique id for this server.
+
+        Returns:
+            None
         """
         self._sid = sid
         self._state = "created"
 
     def state(self):
-        """ Return current state of server
+        """Return current state of server.
 
-        return:
-         - one of "created", "waiting", "running"
+        Returns:
+            (str): "created", "waiting" or "running"
         """
         return self._state
 
     def server_id(self):
-        """ Return id of this server
+        """Return id of this server.
         """
         return self._sid
 
     def set_server_id(self, sid):
-        """ Set id of server
+        """Set id of a non launched server.
+
+        Args:
+            sid: (str)
+
+        Returns:
+            None
         """
         assert self._state == "created"
         self._sid = sid
 
     def registered(self):
-        """ This server has been registered on SFW
+        """Call this function once server registration is effective
         """
         self._state = "waiting"
 
     def ping(self, url):
-        """ Check the actual state of the server
+        """Check the actual state of the server.
 
-        arg:
-         - url (url): url used to send response message
+        Args:
+            url: (url) url used to send response message
+
+        Returns:
+            None
         """
-        print "ping", url
         data = {"id": self._sid, "state": self._state}
         post_json(url, data)
 
@@ -100,14 +111,16 @@ class OAServer(object):
             raise UserWarning("unrecognized workflow type")
 
     def compute(self, workflow, url_data, url_return):
-        """ Compute given workflow and send back result.
+        """Compute given workflow and send back result.
 
-        args:
-         - workflow (str): id of dataflow to use or python code
-         - url_data (url): url of file to read to get data
-         - url_return (url): url to use to send result
+        Args:
+            workflow: (str) id of dataflow to use or python code
+            url_data: (url) url of file to read to get data or python dict
+            url_return: (url) url to use to send result
+
+        Returns:
+
         """
-        print "compute", url_return
         assert self._state == "waiting"
         self._state = "running"
 
@@ -125,7 +138,6 @@ class OAServer(object):
             self._state = "waiting"
 
     def delete(self):
-        """ Invalidate this server
+        """Invalidate this server.
         """
-        print "delete", self._sid
         self._state = "deleted"

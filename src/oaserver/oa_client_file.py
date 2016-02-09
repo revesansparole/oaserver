@@ -47,9 +47,9 @@ class OAClientFile(object):
                         args = reg['args']
                         self._sid = args['id']
                         self._stdout = stdout
-                        self._compute_pth = args["url"]
-                        self._ping_pth = args["urlping"]
-                        self._delete_pth = args["urldelete"]
+                        self._compute_pth = pj(pth, "stdin", args["url"])
+                        self._ping_pth = pj(pth, "stdin", args["urlping"])
+                        self._delete_pth = pj(pth, "stdin", args["urldelete"])
                         return self._sid
 
         return None

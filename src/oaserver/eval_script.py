@@ -5,18 +5,15 @@ return the result of the function
 
 
 def eval_script(pycode, args=None):
-    """ Evaluate pycode, run expected function main in it.
+    """Evaluate pycode, run expected function main in it.
 
+    Raises: KeyError if no object called 'main' is found in the code.
     Args:
-        - pycode(str): python script as txt
-        - args(tuple of any): arguments to pass to main
+        pycode: (str) python script as txt
+        args: (dict of any) arguments to pass to main
 
-    Return:
-        the result of 'main' function inside pycode
-
-    Raise:
-        KeyError if no object called 'main'
-        is found in the code.
+    Returns:
+        (any) the result of 'main' function inside pycode
     """
     if args is None:
         args = {}

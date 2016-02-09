@@ -214,9 +214,3 @@ def post_json(url, data):
                 raise URLError("unable to send data: %s" % ret.status_code)
         except (ConnectionError, InvalidSchema) as e:
             raise URLError(e)
-
-
-def retrieve_json():
-    """ Convenience function for web.py framework
-    """
-    return json.loads(web.data())

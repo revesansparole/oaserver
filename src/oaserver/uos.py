@@ -2,7 +2,6 @@
 """
 
 import os
-from time import sleep
 
 
 def ls(pth):

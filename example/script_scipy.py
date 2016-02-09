@@ -10,6 +10,7 @@ ofs = array([random() * pi / 2 for i in range(nb)])
 x_data = array([2 * pi * i / (nb * 100.) for i in range(nb * 100)])
 y_data = array([sum([apl[i] * sin(v + ofs[i]) for i in range(nb)]) + random() / 10. for v in x_data])
 
+
 def err(params):
     a = params[:nb]
     b = params[nb:]
@@ -21,9 +22,18 @@ guess = array([1.] * nb + [0.] * nb)
 
 
 def main(a):
+    """Compute leastsq of some random sinus function
+
+    Args:
+        a: (any) unused
+
+    Returns:
+        None
+    """
+    del a
+
     opt = leastsq(err, guess)
     print opt
 
     print "guess", (err(guess) ** 2).sum()
     print "final", (err(opt[0]) ** 2).sum()
-

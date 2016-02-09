@@ -39,6 +39,8 @@ class OAServerFile(WatchdogListener):
     #
     #########################################################################
     def start(self):
+        print("oas %s started, watching %s" % (self._oas.server_id(),
+                                               self._obs.watched_path()))
         self._obs.start()
 
     def stop(self):
