@@ -8,4 +8,4 @@ simon_inra = "10.0.14.158"
 
 
 sheldon_com_dir = "com_dir"
-frgrid_com_dir = "/vo.france-grilles.fr/user/j/jchopard"
+dirac_com_dir = "/vo.france-grilles.fr/user/j/jchopard/oas"
