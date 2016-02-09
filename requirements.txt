@@ -3,5 +3,4 @@
 
 # }}
 requests
-watchdog
-web.py
+
