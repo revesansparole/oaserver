@@ -36,6 +36,36 @@ def ls(url):
     return pths
 
 
+def ls_dir(url):
+    """List all available resources at the given location
+
+    Warnings: work only on directory like resources.
+
+    Args:
+        url: (urlparse.SplitResult) Resource locator
+
+    Returns:
+        (list of str): list of resources names.
+    """
+    root = url.path
+    res = check_output(["dirac-dms-find-lfns Path=%s" % root], shell=True)
+
+    pths = set()
+
+    for line in res.splitlines()[1:]:
+        line = line.strip()
+        if len(line) > 0:
+            if line.startswith(root):
+                pth = line[len(root):][1:]
+                dname = os.path.dirname(pth)
+                if len(dname) > 0:
+                    pths.add(pth)
+            else:
+                raise URLError("bad path")
+
+    return pths
+
+
 def exists(url):
     """Check the existence of a resource.
 

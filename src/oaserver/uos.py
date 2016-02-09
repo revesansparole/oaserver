@@ -56,6 +56,50 @@ def ls(url):
         return names
 
 
+def ls_dir(url):
+    """List all directories at a given location.
+
+    Args:
+        url: (url) path to check
+
+    Returns:
+        (list of str): list of directory names
+    """
+    url = ensure_url(url)
+
+    if url.netloc != "":
+        raise UserWarning("don't know how to handle web ls")
+
+    if url.scheme == "dirac":
+        return dirac_api.ls_dir(url)
+    else:
+        names = []
+        for name in os.listdir(url.path):
+            if os.path.isdir(os.path.join(url.path, name)):
+                names.append(name)
+
+        return names
+
+
+def exists(url):
+    """Check the existence of a resource.
+
+    Args:
+        url: (urlparse.SplitResult) Resource locator
+
+    Returns:
+        (Bool): True if resource is accessible
+    """
+    url = ensure_url(url)
+    if url.netloc != "":
+        raise UserWarning("don't know how to handle web ls")
+
+    if url.scheme == "dirac":
+        return dirac_api.exists(url)
+    else:
+        return os.path.exists(url.path)
+
+
 def remove(url):
     """Delete specified file.
 

@@ -2,12 +2,10 @@
 with scifloware specifications to communicate with OAServers.
 """
 
-from os import listdir, remove
-from os.path import exists, isdir
-from os.path import join as pj
 from time import sleep
 
-from oaserver.json_tools import get_json, post_json
+from .json_tools import get_json, post_json
+from .uos import exists, ls_dir, remove, URLError
 
 
 class OAClientFile(object):
@@ -34,30 +32,30 @@ class OAClientFile(object):
         if self._sid is not None:
             raise UserWarning("Already connected, clear first?")
 
-        for name in listdir(self._com_pth):
-            pth = pj(self._com_pth, name)
-            if isdir(pth):
-                stdout = pj(pth, "stdout")
-                if exists(stdout):
-                    if exists(pj(stdout, "reg.json")):
-                        reg = get_json(pj(stdout, "reg.json"))
-                        remove(pj(stdout, "reg.json"))
-
-                        assert reg['type'] == "FileSystemEngine"
-                        args = reg['args']
-                        self._sid = args['id']
-                        self._stdout = stdout
-                        self._compute_pth = pj(pth, "stdin", args["url"])
-                        self._ping_pth = pj(pth, "stdin", args["urlping"])
-                        self._delete_pth = pj(pth, "stdin", args["urldelete"])
-                        return self._sid
+        for name in ls_dir(self._com_pth):
+            pth = self._com_pth + "/" + name
+            stdout = pth + "/stdout"
+            reg_pth = stdout + "/reg.json"
+            try:
+                reg = get_json(reg_pth)
+                assert reg['type'] == "FileSystemEngine"
+                remove(reg_pth)
+                args = reg['args']
+                self._sid = args['id']
+                self._stdout = stdout
+                self._compute_pth = pth + "/stdin/" + args["url"]
+                self._ping_pth = pth + "/stdin/" + args["urlping"]
+                self._delete_pth = pth + "/stdin/" + args["urldelete"]
+                return self._sid
+            except URLError:
+                pass
 
         return None
 
     def ping(self):
         """Poll associated server.
         """
-        res_pth = pj(self._stdout, "ping.json")
+        res_pth = self._stdout + "/ping.json"
         if exists(res_pth):
             raise UserWarning("already existing ping answer!!!")
 
@@ -92,7 +90,7 @@ class OAClientFile(object):
         if self._sid is None:
             raise UserWarning("No registered server, connect first???")
 
-        res_pth = pj(self._stdout, "result.json")
+        res_pth = self._stdout + "/result.json"
         if exists(res_pth):
             raise UserWarning("already existing computation answer!!!")
 
@@ -109,7 +107,7 @@ class OAClientFile(object):
         Returns:
             (any) actual result of script call
         """
-        res_pth = pj(self._stdout, "result.json")
+        res_pth = self._stdout + "/result.json"
         if not exists(res_pth):
             raise UserWarning("Computation still running????")
 
