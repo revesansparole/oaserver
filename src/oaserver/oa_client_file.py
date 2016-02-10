@@ -52,7 +52,7 @@ class OAClientFile(object):
 
         return None
 
-    def ping(self):
+    def ping(self, nb_cycles=10):
         """Poll associated server.
         """
         res_pth = self._stdout + "/ping.json"
@@ -62,7 +62,7 @@ class OAClientFile(object):
         cmd = dict(url=res_pth)
         post_json(self._ping_pth, cmd)
 
-        for i in range(10):
+        for i in range(nb_cycles):
             if exists(res_pth):
                 res = get_json(res_pth)
                 remove(res_pth)
@@ -71,7 +71,8 @@ class OAClientFile(object):
 
             sleep(0.1)
 
-        raise UserWarning("server down")
+        #raise UserWarning("server down")
+        return None
 
     def compute(self, pycode, data):
         """Launch a script on server.

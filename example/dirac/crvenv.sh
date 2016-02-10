@@ -1,10 +1,10 @@
 virtualenv venv
 source venv/bin/activate
 
-cd ..
+cd ../..
 python setup.py install
 
-cd try
-source deactivate
+cd example/dirac
+deactivate
 
-zip venv
+zip -r venv.zip venv
