@@ -1,56 +1,59 @@
 {
-    "_pkglts": {
-        "auto_install": true, 
-        "use_prompts": false
-    }, 
-    "base": {
-        "namespace": null, 
-        "owner": "revesansparole", 
-        "pkgname": "oaserver"
-    }, 
-    "coverage": {}, 
-    "coveralls": {}, 
-    "data": {}, 
-    "doc": {
-        "description": "Computation server oriented OpenAlea", 
-        "keywords": ""
-    }, 
-    "flake8": {}, 
-    "github": {
-        "project": "oaserver"
-    }, 
-    "landscape": {}, 
-    "license": {
-        "name": "CeCILL-C", 
-        "organization": "OpenAlea", 
-        "project": "oaserver", 
-        "year": "2015"
-    }, 
-    "pypi": {
-        "classifiers": [
-            "Development Status :: 2 - Pre-Alpha", 
-            "Intended Audience :: Developers", 
-            "License :: OSI Approved :: BSD License", 
-            "Natural Language :: English"
-        ]
-    }, 
-    "pysetup": {
-        "author_email": "revesansparole@gmail.com", 
-        "author_name": "revesansparole", 
-        "intended_versions": [
-            "27"
-        ]
-    }, 
-    "readthedocs": {
-        "project": "{{key, github.project}}"
-    }, 
-    "sphinx": {}, 
-    "test": {}, 
-    "tox": {}, 
-    "travis": {}, 
-    "version": {
-        "major": 0, 
-        "minor": 1, 
-        "post": 3
-    }
+  "_pkglts": {
+    "auto_install": true, 
+    "install_front_end": "stdout", 
+    "use_prompts": false, 
+    "version": 3
+  }, 
+  "base": {
+    "authors": [
+      [
+        "revesansparole",
+        "revesansparole@gmail.com"
+      ]
+    ], 
+    "namespace": null, 
+    "pkgname": "oaserver", 
+    "url": null
+  }, 
+  "coverage": {}, 
+  "coveralls": {}, 
+  "data": {}, 
+  "doc": {
+    "description": "Server oriented computation for OpenAlea",
+    "keywords": []
+  }, 
+  "flake8": {}, 
+  "github": {
+    "owner": "{{ base.authors[0][0] }}", 
+    "project": "{{ base.pkgname }}", 
+    "url": "https://github.com/{{ github.owner }}/{{ github.project }}"
+  }, 
+  "landscape": {}, 
+  "license": {
+    "name": "cecill-c", 
+    "organization": "openalea",
+    "project": "{{ base.pkgname }}", 
+    "year": 2015
+  }, 
+  "pysetup": {
+    "intended_versions": [
+      "27"
+    ], 
+    "require": [[null, "requests"]]
+  }, 
+  "readthedocs": {
+    "project": "{{ github.project }}"
+  }, 
+  "sphinx": {
+    "autodoc_dvlpt": true, 
+    "theme": "default"
+  }, 
+  "test": {}, 
+  "travis": {}, 
+  "version": {
+    "major": 0, 
+    "minor": 1, 
+    "post": 0
+  }
 }

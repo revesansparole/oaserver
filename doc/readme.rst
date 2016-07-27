@@ -18,6 +18,14 @@ Simple usage:
     from oaserver import *
 
 
+Contribute
+==========
+
+Fork this project on github_
+
+.. _github: https://github.com/revesansparole/oaserver
+
+
 
 Acknowledgments
 ===============

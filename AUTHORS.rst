@@ -1,17 +1,16 @@
-=======
 Credits
 =======
 
 Development Lead
 ----------------
 
+.. {# pkglts, doc
 
-* base.author_name <base.author_email>
+* revesansparole, <revesansparole@gmail.com>
 
+.. #}
 
 Contributors
 ------------
 
 None yet. Why not be the first?
-
-test

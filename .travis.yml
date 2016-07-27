@@ -1,22 +1,58 @@
-# {{pkglts travis,
+# {# pkglts, travis
 # Config file for automatic testing at travis-ci.org
 
 language: python
 
 python:
-   - "2.7"
+  - "2.7"
 
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+# #}
+
+addons:
+  apt:
+    packages:
+# {# pkglts, travis.addons
+
+ #}
+
 install:
- - pip install -r requirements.txt
- - pip install -r dvlpt_requirements.txt
- - pip install coveralls
+# {# pkglts, travis.install
+  # We do this conditionally because it saves us some downloading if the
+  # version is the same.
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
 
-# command to run tests, e.g. python setup.py test
-script: nosetests
+  - conda create -q -n myenv python=$TRAVIS_PYTHON_VERSION
+  - source activate myenv
 
+
+  - conda install requests
+  - conda install coverage
+  - conda install flake8
+  - conda install mock
+  - conda install nose
+  - conda install sphinx
+  - pip install coveralls
+
+  - python setup.py install
+# #}
+
+script:
+# {# pkglts, travis.script
+  - nosetests
+# #}
 
 after_success:
-  coveralls
-
-# }}
+# {# pkglts, travis.after
+- coveralls
+# #}
