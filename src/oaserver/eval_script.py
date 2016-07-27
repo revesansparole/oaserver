@@ -1,33 +1,34 @@
-"""
-Evaluate a main function provided in a text file
-return the result of the function
+"""Evaluate some code within a provided environment
+and returning the value of specific evaluated variables
 """
 
 
-def eval_script(pycode, args=None):
+def eval_script(pycode, env, outputs):
     """Evaluate pycode, run expected function main in it.
 
     Raises: KeyError if no object called 'main' is found in the code.
     Args:
-        pycode: (str) python script as txt
-        args: (dict of any) arguments to pass to main
+        pycode (str): python script as txt
+        env (dict of any): preset values used as globals during evaluation
+        outputs (list of str): list of variable names to retrieve
+                               at the end of execution
 
     Returns:
-        (any) the result of 'main' function inside pycode
+        (str, str): status of execution and error message if any
+        (list of any): value of variables named in outputs
     """
-    if args is None:
-        args = {}
-
-    ast = compile(pycode, "<rem str>", 'exec')
-    loc = {}
-    eval(ast, loc)
+    loc = dict(env)
 
     try:
-        main = loc['main']
-    except KeyError:
-        raise UserWarning("no 'main' function defined in script")
+        ast = compile(pycode, "<rem str>", 'exec')
+        eval(ast, loc)
+        status = ('OK', "")
+    except Exception as e:
+        status = (e.__class__.__name__, e.message)
 
-    try:
-        return main(**args)
-    except TypeError:
-        raise UserWarning("'main' object is not callable or args do not match")
+    if status[0] == 'OK':
+        outvals = [loc[name] for name in outputs]
+    else:
+        outvals = []
+
+    return status, outvals

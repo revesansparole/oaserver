@@ -2,11 +2,11 @@
 with scifloware specifications.
 """
 
+from threading import Thread
+
 # from eval_dataflow import eval_dataflow
 # from eval_node import eval_node
 from .eval_script import eval_script
-from .json_tools import get_json, post_json
-from .uos import ensure_url, URLError
 
 
 class OAServer(object):
@@ -23,79 +23,86 @@ class OAServer(object):
         """
         self._sid = sid
         self._state = "created"
-
-    def state(self):
-        """Return current state of server.
-
-        Returns:
-            (str): "created", "waiting" or "running"
-        """
-        return self._state
-
-    def server_id(self):
-        """Return id of this server.
-        """
-        return self._sid
-
-    def set_server_id(self, sid):
-        """Set id of a non launched server.
-
-        Args:
-            sid: (str)
-
-        Returns:
-            None
-        """
-        assert self._state == "created"
-        self._sid = sid
+        self._status = None
+        self._buffer = {}
 
     def registered(self):
         """Call this function once server registration is effective
         """
         self._state = "waiting"
 
-    def ping(self, url):
+    def ping(self):
         """Check the actual state of the server.
 
+        Returns:
+            (dict)
+        """
+        return dict(id=self._sid, state=self._state)
+
+    def compute(self, workflow, data, outputs):
+        """Launch computation in a separated thread and return.
+
         Args:
-            url: (url) url used to send response message
+            workflow (str): workflow def or python script
+            data (dict): set of variables to use as input
+            outputs (list of str): name of outputs to retrieve
+
+        Returns:
+            (bool): whether the computation started or not
+        """
+        if self._state != "waiting":
+            return False
+
+        self._state = "running"
+        self._status = None
+        self._buffer.clear()
+
+        # launch computation in separated thread
+        th = Thread(target=self.perform_task, args=(workflow, data, outputs))
+        th.start()
+
+        # return
+        return True
+
+    def retrieve_results(self):
+        """Retrieves result from last task.
+        """
+        return self._status, dict(self._buffer)
+
+    def delete(self):
+        """Invalidate this server.
+        """
+        self._state = "deleted"
+        print "deleted", self._sid
+
+    def perform_task(self, workflow, data, outputs):
+        """Compute given workflow and send back result.
+
+        Notes: write directly result in buffer
+
+        Args:
+            workflow (str): workflow def or python script
+            data (dict): set of variables to use as input
+            outputs (list of str): name of outputs to retrieve
 
         Returns:
             None
         """
-        data = {"id": self._sid, "state": self._state}
-        post_json(url, data)
-
-    def _compute(self, workflow, url_data):
-        # analyse url_data argument
-        url_data = ensure_url(url_data, 'code')
-        if url_data.scheme == 'code':
-            ast = compile(url_data.path, "<rem str>", 'exec')
-            data = {}
-            try:
-                eval(ast, data)
-            except Exception as e:
-                raise UserWarning("error in data pycode: %s" % e)
-
-            del data['__builtins__']
-        else:
-            data = get_json(url_data)
-
+        print "task started"
         # analyse workflow argument and perform computation
         if workflow.startswith("pycode:"):
             pycode = workflow[7:]
             if len(pycode) == 0:
                 raise UserWarning("pycode not defined")
 
-            self._state = "running"
-            return eval_script(pycode, data)
+            status, vals = eval_script(pycode, data, outputs)
+            res = dict(zip(outputs, vals))
 
         # elif workflow.startswith("dataflow:"):
         #     dataflow = workflow[9:]
         #     if len(dataflow) == 0:
         #         raise UserWarning("dataflow code not defined")
         #
-        #     self._state = "running"
         #     return eval_dataflow(dataflow, data)
         #
         # elif ":" in workflow:
@@ -105,41 +112,18 @@ class OAServer(object):
         #     if len(node_id) == 0:
         #         raise UserWarning("node not defined")
         #
-        #     self._state = "running"
         #     return eval_node((pkg_id, node_id), data)
 
         else:
             raise UserWarning("unrecognized workflow type")
 
-    def compute(self, workflow, url_data, url_return):
-        """Compute given workflow and send back result.
+        print "task done"
+        if self._state == "running":
+            # write result in buffer
+            if len(self._buffer) > 0:
+                # problem somebody else mess up with buffer
+                raise UserWarning("Problem with parallel computations")
+            self._status = status
+            self._buffer.update(res)
 
-        Args:
-            workflow: (str) id of dataflow to use or python code
-            url_data: (url) url of file to read to get data or python dict
-            url_return: (url) url to use to send result
-
-        Returns:
-
-        """
-        assert self._state == "waiting"
-        self._state = "running"
-
-        try:
-            result = self._compute(workflow, url_data)
-
-            # send result
-            data = {"id": self._sid,
-                    "result": result}
-
-            post_json(url_return, data)
-        except (URLError, UserWarning, ValueError) as e:
-            raise UserWarning(e)
-        finally:
             self._state = "waiting"
-
-    def delete(self):
-        """Invalidate this server.
-        """
-        self._state = "deleted"
-        print "deleted", self._sid
