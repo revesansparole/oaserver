@@ -9,8 +9,9 @@ from .oa_server import OAServer
 class MyHandler(BaseHTTPRequestHandler):
 
     def __init__(self, request, client_address, server):
-        BaseHTTPRequestHandler.__init__(self, request, client_address, server)
         print "init", request, client_address, server
+        self._oas = server.oas
+        BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
     # Handler for the GET requests
     def do_GET(self):
@@ -26,24 +27,32 @@ class MyHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
+        ans = None
         if self.path == "/":
-            self.wfile.write(json.dumps({"body": None}))
+            ans = "nothing to do"
         elif self.path == "/ping":
-            self.wfile.write(json.dumps({"body": "ping"}))
+            ans = self._oas.ping()
+
+        self.wfile.write(json.dumps(ans))
         return
 
 
-# Create a web server and define the handler to manage the
-# incoming request
-server = HTTPServer(('', 6544), MyHandler)
-server._oas = OAServer("oatest")
+def main():
+    from sys import argv
 
-print 'Started httpserver on port ', 6544
+    if len(argv) > 1:
+        server_name = argv[1]
+    else:
+        server_name = "oatest"
 
-try:
-    # Wait forever for incoming htto requests
-    server.serve_forever()
+    server = HTTPServer(('', 6544), MyHandler)
+    server.oas = OAServer(server_name)
+    server.oas.registered()
 
-except KeyboardInterrupt:
-    print '^C received, shutting down the web server'
-    server.socket.close()
+    print 'Started httpserver on port ', 6544
+
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print '^C received, shutting down the web server'
+        server.socket.close()
