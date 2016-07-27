@@ -73,6 +73,8 @@ setup_kwds = dict(
 # #}
 # change setup_kwds below before the next pkglts tag
 
+setup_kwds['entry_points']['console_scripts'] = ['oas = oaserver.http_server:main']
+
 # do not change things below
 # {# pkglts, pysetup.call
 setup(**setup_kwds)
