@@ -1,17 +1,17 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import json
+from urlparse import parse_qs
 
 from .oa_server import OAServer
+
+
+def sr(v):
+    return json.loads(v)
 
 
 # This class will handles any incoming request from
 # the browser
 class MyHandler(BaseHTTPRequestHandler):
-
-    def __init__(self, request, client_address, server):
-        print "init", request, client_address, server
-        self._oas = server.oas
-        BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
     # Handler for the GET requests
     def do_GET(self):
@@ -24,16 +24,40 @@ class MyHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         print "POST: path", self.path
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
+        oas = self.server.oas
+
+        status = None
         ans = None
         if self.path == "/":
             ans = "nothing to do"
         elif self.path == "/ping":
-            ans = self._oas.ping()
+            ans = oas.ping()
+        elif self.path == "/compute":
+            length = int(self.headers.getheader('content-length'))
+            args = parse_qs(self.rfile.read(length), keep_blank_values=1)
+            print "data", args
+            try:
+                workflow = sr(args['workflow'][0])
+                data = sr(args['data'][0])
+                outputs = sr(args['outputs'][0])
+                if oas.compute(workflow, data, outputs):
+                    status = ('OK', "")
+                    ans = oas.ping()
+                else:
+                    status = ('fail', 'server already computing')
+                    ans = {}
+            except Exception as e:
+                status = (e.__class__.__name__, e.message)
+                ans = {}
+        elif self.path == "/results":
+            status, ans = oas.retrieve_results()
 
-        self.wfile.write(json.dumps(ans))
+        ret = dict(status=status, ans=ans)
+
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps(ret))
         return
 
 
