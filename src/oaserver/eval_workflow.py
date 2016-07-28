@@ -22,6 +22,23 @@ def find_cnf(env):
     raise NameError("CNF not found")
 
 
+def find_inport_index(node, name):
+    """Find index of an input port based on its name
+
+    Args:
+        node (Node):
+        name (str): must be unique to node
+
+    Returns:
+        (int)
+    """
+    for i, pdef in enumerate(node.factory.inputs):
+        if pdef['name'] == name:
+            return i
+
+    raise KeyError("name '%s' not found in inputs of this node" % name)
+
+
 def find_outport_index(node, name):
     """Find index of an output port based on its name
 
@@ -68,6 +85,14 @@ def eval_workflow(workflow, env, outputs):
         pm = PackageManager()
         pm.init()
         cn = cnf.instantiate()
+
+        # fill inputs
+        for inname, value in env.items():
+            vid_str, pname_str = inname.split(":")
+            vid = int(vid_str)
+            pname = pname_str.strip()
+            n = cn.node(vid)
+            n.inputs[find_inport_index(n, pname)] = value
 
         # evaluate workflow
         prov = cn.eval_as_expression(record_provenance=True)
