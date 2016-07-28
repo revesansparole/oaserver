@@ -90,30 +90,35 @@ class OAServer(object):
         """
         print "task started"
         # analyse workflow argument and perform computation
-        if workflow.startswith("pycode:"):
-            pycode = workflow[7:]
-            if len(pycode) == 0:
-                raise UserWarning("pycode not defined")
+        status = ('OK', "")
+        try:
+            if workflow.startswith("pycode:"):
+                pycode = workflow[7:]
+                if len(pycode) == 0:
+                    raise UserWarning("pycode not defined")
 
-            status, vals = eval_script(pycode, data, outputs)
-        elif workflow.startswith("workflow:"):
-            dataflow = workflow[9:]
-            if len(dataflow) == 0:
-                raise UserWarning("workflow code not defined")
+                vals = eval_script(pycode, data, outputs)
+            elif workflow.startswith("workflow:"):
+                dataflow = workflow[9:]
+                if len(dataflow) == 0:
+                    raise UserWarning("workflow code not defined")
 
-            status, vals = eval_workflow(dataflow, data, outputs)
+                vals = eval_workflow(dataflow, data, outputs)
 
-        # elif ":" in workflow:
-        #     pkg_id, node_id = workflow.split(":")
-        #     if len(pkg_id) == 0:
-        #         raise UserWarning("package not defined")
-        #     if len(node_id) == 0:
-        #         raise UserWarning("node not defined")
-        #
-        #     return eval_node((pkg_id, node_id), data)
+            # elif ":" in workflow:
+            #     pkg_id, node_id = workflow.split(":")
+            #     if len(pkg_id) == 0:
+            #         raise UserWarning("package not defined")
+            #     if len(node_id) == 0:
+            #         raise UserWarning("node not defined")
+            #
+            #     return eval_node((pkg_id, node_id), data)
 
-        else:
-            raise UserWarning("unrecognized workflow type")
+            else:
+                raise UserWarning("unrecognized workflow type")
+        except Exception as e:
+            status = (e.__class__.__name__, e.message)
+            vals = []
 
         print "task done"
         if self._state == "running":

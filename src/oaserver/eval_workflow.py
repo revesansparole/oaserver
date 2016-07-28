@@ -67,49 +67,44 @@ def eval_workflow(workflow, env, outputs):
                                at the end of execution
 
     Returns:
-        (str, str): status of execution and error message if any
         (list of any): value of variables named in outputs
     """
     env = dict(env)
     outvals = []
 
-    try:
-        loc = {}
-        ast = compile(workflow, "<rem str>", 'exec')
-        eval(ast, loc)
+    # compile code
+    loc = {}
+    ast = compile(workflow, "<rem str>", 'exec')
+    eval(ast, loc)
 
-        # try to find a CNF in loc
-        cnf = find_cnf(loc)
+    # try to find a CNF in loc
+    cnf = find_cnf(loc)
 
-        # instantiate workflow
-        pm = PackageManager()
-        pm.init()
-        cn = cnf.instantiate()
+    # instantiate workflow
+    pm = PackageManager()
+    pm.init()
+    cn = cnf.instantiate()
 
-        # fill inputs
-        for inname, value in env.items():
-            vid_str, pname_str = inname.split(":")
+    # fill inputs
+    for inname, value in env.items():
+        vid_str, pname_str = inname.split(":")
+        vid = int(vid_str)
+        pname = pname_str.strip()
+        n = cn.node(vid)
+        n.inputs[find_inport_index(n, pname)] = value
+
+    # evaluate workflow
+    prov = cn.eval_as_expression(record_provenance=True)
+
+    # get outputs as result
+    if len(outputs) == 1 and outputs[0] == "prov":
+        outvals.append(prov.as_wlformat())
+    else:
+        for outname in outputs:
+            vid_str, pname_str = outname.split(":")
             vid = int(vid_str)
             pname = pname_str.strip()
             n = cn.node(vid)
-            n.inputs[find_inport_index(n, pname)] = value
+            outvals.append(n.outputs[find_outport_index(n, pname)])
 
-        # evaluate workflow
-        prov = cn.eval_as_expression(record_provenance=True)
-
-        # get outputs as result
-        if len(outputs) == 1 and outputs[0] == "prov":
-            outvals.append(prov.as_wlformat())
-        else:
-            for outname in outputs:
-                vid_str, pname_str = outname.split(":")
-                vid = int(vid_str)
-                pname = pname_str.strip()
-                n = cn.node(vid)
-                outvals.append(n.outputs[find_outport_index(n, pname)])
-
-        status = ('OK', "")
-    except Exception as e:
-        status = (e.__class__.__name__, e.message)
-
-    return status, outvals
+    return outvals

@@ -5,26 +5,20 @@ from oaserver.eval_script import eval_script
 
 def test_script_is_python():
     script = "<html><body>toto</body></html>"
-    status, vals = eval_script(script, {}, [])
-    assert status[0] == 'SyntaxError'
+    assert_raises(SyntaxError, lambda: eval_script(script, {}, []))
 
 
 def test_script_is_valid_python():
     script = "a = 1\nb"
-    status, vals = eval_script(script, {}, [])
-    assert status[0] == 'NameError'
+    assert_raises(NameError, lambda: eval_script(script, {}, []))
     script = "a = (}"
-    status, vals = eval_script(script, {}, [])
-    assert status[0] == 'SyntaxError'
+    assert_raises(SyntaxError, lambda: eval_script(script, {}, []))
     script = "a = []\na[1]"
-    status, vals = eval_script(script, {}, [])
-    assert status[0] == 'IndexError'
+    assert_raises(IndexError, lambda: eval_script(script, {}, []))
     script = "a = []\na.toto"
-    status, vals = eval_script(script, {}, [])
-    assert status[0] == 'AttributeError'
+    assert_raises(AttributeError, lambda: eval_script(script, {}, []))
     script = "def toto():\n  print(1)\n print(2)"
-    status, vals = eval_script(script, {}, [])
-    assert status[0] == 'IndentationError'
+    assert_raises(IndentationError, lambda: eval_script(script, {}, []))
 
 
 def test_eval_script_raise_keyerror_if_return_value_do_not_exists():
@@ -35,6 +29,5 @@ def test_eval_script_raise_keyerror_if_return_value_do_not_exists():
 
 def test_eval_script_is_working():
     script = "c = a + b"
-    status, vals = eval_script(script, {'a': 1, 'b': 2}, ['c'])
-    assert status[0] == 'OK'
+    vals = eval_script(script, {'a': 1, 'b': 2}, ['c'])
     assert vals[0] == 3
