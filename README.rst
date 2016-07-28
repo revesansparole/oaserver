@@ -1,6 +1,6 @@
-========================
+========
 oaserver
-========================
+========
 
 .. {# pkglts, doc
 
@@ -28,3 +28,7 @@ oaserver
 
 Server oriented computation for OpenAlea
 
+Three layers:
+ - OAServer to perform threaded computations of OpebAlea objects
+ - http_server to access OAServer through and http interface
+ - http_client to communicate with http_server
