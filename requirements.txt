@@ -3,6 +3,9 @@
 # edit .pkglts/pkg_cfg instead
 # section pysetup
 
+# openalea/deploy
+# openalea/core
 requests
+requests_mock
 
 # #}

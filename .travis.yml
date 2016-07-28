@@ -36,7 +36,10 @@ install:
   - source activate myenv
 
 
+  - pip install git+https://github.com/openalea/deploy
+  - pip install git+https://github.com/openalea/core
   - conda install requests
+  - pip install requests_mock
   - conda install coverage
   - conda install flake8
   - conda install mock

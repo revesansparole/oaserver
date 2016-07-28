@@ -57,6 +57,7 @@ setup_kwds = dict(
     package_data={'oaserver_data': data_files},
     install_requires=[
         "requests",
+        "requests_mock",
         ],
     tests_require=[
         "coverage",

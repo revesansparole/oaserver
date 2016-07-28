@@ -35,12 +35,29 @@
     "organization": "openalea",
     "project": "{{ base.pkgname }}", 
     "year": 2015
-  }, 
+  },
   "pysetup": {
     "intended_versions": [
       "27"
-    ], 
-    "require": [[null, "requests"]]
+    ],
+    "require": [
+      [
+        "git",
+        "openalea/deploy"
+      ],
+      [
+        "git",
+        "openalea/core"
+      ],
+      [
+        null,
+        "requests"
+      ],
+      [
+        "pip",
+        "requests_mock"
+      ]
+    ]
   }, 
   "readthedocs": {
     "project": "{{ github.project }}"
