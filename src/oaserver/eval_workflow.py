@@ -73,12 +73,15 @@ def eval_workflow(workflow, env, outputs):
         prov = cn.eval_as_expression(record_provenance=True)
 
         # get outputs as result
-        for outname in outputs:
-            vid_str, pname_str = outname.split(":")
-            vid = int(vid_str)
-            pname = pname_str.strip()
-            n = cn.node(vid)
-            outvals.append(n.outputs[find_outport_index(n, pname)])
+        if len(outputs) == 1 and outputs[0] == "prov":
+            outvals.append(prov.as_wlformat())
+        else:
+            for outname in outputs:
+                vid_str, pname_str = outname.split(":")
+                vid = int(vid_str)
+                pname = pname_str.strip()
+                n = cn.node(vid)
+                outvals.append(n.outputs[find_outport_index(n, pname)])
 
         status = ('OK', "")
     except Exception as e:
