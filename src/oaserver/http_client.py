@@ -3,6 +3,8 @@ from time import sleep
 
 from oaserver.http_server import sw
 
+server_url = "http://127.0.0.1:6544/"
+
 
 def format_res(response):
     """Return status, ans from result of a request
@@ -18,13 +20,22 @@ def format_res(response):
 
 
 def ping():
+    """Ping server
+
+    Returns:
+        (tuple): status, answer
+    """
+    res = requests.post(server_url + "ping")
+    return format_res(res)
+
+
+def server_state():
     """Ping server to know its state
 
     Returns:
         (str): actual state of the server
     """
-    res = requests.post("http://127.0.0.1:6544/ping")
-    status, answer = format_res(res)
+    status, answer = ping()
     return answer['state']
 
 
@@ -40,7 +51,7 @@ def compute(workflow, data, outputs):
         (bool): whether the computation started or not
     """
     data = dict(workflow=sw(workflow), data=sw(data), outputs=sw(outputs))
-    res = requests.post("http://127.0.0.1:6544/compute", data=data)
+    res = requests.post(server_url + "compute", data=data)
     status, answer = format_res(res)
     return status[0] == 'OK'
 
@@ -53,7 +64,7 @@ def retrieve_results():
     Returns:
         (tuple): status, answer
     """
-    res = requests.post("http://127.0.0.1:6544/results")
+    res = requests.post(server_url + "results")
     return format_res(res)
 
 
@@ -68,7 +79,7 @@ def wait_for_result(max_time=10, step=0.1):
         (tuple): tuple of status, answer
     """
     cum_time = 0.
-    while ping() == "running":
+    while server_state() == "running":
         sleep(step)
         cum_time += step
         if cum_time > max_time:
