@@ -1,40 +1,91 @@
-import json
 import requests
 from time import sleep
 
+from oaserver.http_server import sw
 
-def sw(v):
-    return json.dumps(v)
+
+def format_res(response):
+    """Return status, ans from result of a request
+
+    Args:
+        response (Response): res of a requests to the server
+
+    Returns:
+        (tuple):
+    """
+    d = response.json()
+    return d['status'], d['ans']
 
 
 def ping():
+    """Ping server to know its state
+
+    Returns:
+        (str): actual state of the server
+    """
     res = requests.post("http://127.0.0.1:6544/ping")
-    return res.json()['ans']['state']
-
-# res = requests.post("http://127.0.0.1:6544/ping")
-# print res.status_code
-# print "res", res.json()
+    status, answer = format_res(res)
+    return answer['state']
 
 
-pycode = """
+def compute(workflow, data, outputs):
+    """Launch a computation on the server
+
+    Args:
+        workflow (str): workflow def or python script
+        data (dict): set of variables to use as input
+        outputs (list of str): name of outputs to retrieve
+
+    Returns:
+        (bool): whether the computation started or not
+    """
+    data = dict(workflow=sw(workflow), data=sw(data), outputs=sw(outputs))
+    res = requests.post("http://127.0.0.1:6544/compute", data=data)
+    status, answer = format_res(res)
+    return status[0] == 'OK'
+
+
+def retrieve_results():
+    """Fetch results from server.
+
+    Warnings: no attempt are being made to check for validity of results
+
+    Returns:
+        (tuple): status, answer
+    """
+    res = requests.post("http://127.0.0.1:6544/results")
+    return format_res(res)
+
+
+def wait_for_result(max_time=10, step=0.1):
+    """Wait for a computation to finish on the server and retrieve results
+
+    Args:
+        max_time (int): maximum number of seconds to wait for answer
+        step (float): sleep time between trials
+
+    Returns:
+        (tuple): tuple of status, answer
+    """
+    cum_time = 0.
+    while ping() == "running":
+        sleep(step)
+        cum_time += step
+        if cum_time > max_time:
+            raise UserWarning("Maximum time reached without answer")
+
+    return retrieve_results()
+
+
+if __name__ == '__main__':
+    pycode = """
 from time import sleep
 
 c = a + b
-sleep(5)
+sleep(c)
 """
 
-data = dict(workflow=sw("pycode:%s" % pycode),
-            data=sw(dict(a=1, b=2)),
-            outputs=sw(["c"]),
-            wtf=sw("here"))
+    ans = compute("pycode:%s" % pycode, dict(a=1, b=2), ["c"])
+    print "compute", ans
+    print "results", wait_for_result()
 
-res = requests.post("http://127.0.0.1:6544/compute", data=data)
-print "compute", res.status_code
-print "res", res.json()
-
-while ping() == "running":
-    sleep(0.1)
-
-res = requests.post("http://127.0.0.1:6544/results")
-print "resulst", res.status_code
-print "res", res.json()

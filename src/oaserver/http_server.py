@@ -5,6 +5,10 @@ from urlparse import parse_qs
 from .oa_server import OAServer
 
 
+def sw(v):
+    return json.dumps(v)
+
+
 def sr(v):
     return json.loads(v)
 
