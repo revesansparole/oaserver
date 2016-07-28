@@ -4,9 +4,9 @@ with scifloware specifications.
 
 from threading import Thread
 
-# from eval_dataflow import eval_dataflow
 # from eval_node import eval_node
 from .eval_script import eval_script
+from .eval_workflow import eval_workflow
 
 
 class OAServer(object):
@@ -96,15 +96,13 @@ class OAServer(object):
                 raise UserWarning("pycode not defined")
 
             status, vals = eval_script(pycode, data, outputs)
-            res = dict(zip(outputs, vals))
+        elif workflow.startswith("workflow:"):
+            dataflow = workflow[9:]
+            if len(dataflow) == 0:
+                raise UserWarning("workflow code not defined")
 
-        # elif workflow.startswith("dataflow:"):
-        #     dataflow = workflow[9:]
-        #     if len(dataflow) == 0:
-        #         raise UserWarning("dataflow code not defined")
-        #
-        #     return eval_dataflow(dataflow, data)
-        #
+            status, vals = eval_workflow(dataflow, data, outputs)
+
         # elif ":" in workflow:
         #     pkg_id, node_id = workflow.split(":")
         #     if len(pkg_id) == 0:
@@ -124,6 +122,6 @@ class OAServer(object):
                 # problem somebody else mess up with buffer
                 raise UserWarning("Problem with parallel computations")
             self._status = status
-            self._buffer.update(res)
+            self._buffer.update(dict(zip(outputs, vals)))
 
             self._state = "waiting"

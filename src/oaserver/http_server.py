@@ -13,11 +13,8 @@ def sr(v):
     return json.loads(v)
 
 
-# This class will handles any incoming request from
-# the browser
 class MyHandler(BaseHTTPRequestHandler):
 
-    # Handler for the GET requests
     def do_GET(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -39,7 +36,6 @@ class MyHandler(BaseHTTPRequestHandler):
         elif self.path == "/compute":
             length = int(self.headers.getheader('content-length'))
             args = parse_qs(self.rfile.read(length), keep_blank_values=1)
-            print "data", args
             try:
                 workflow = sr(args['workflow'][0])
                 data = sr(args['data'][0])

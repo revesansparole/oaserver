@@ -4,9 +4,8 @@ and returning the value of specific evaluated variables
 
 
 def eval_script(pycode, env, outputs):
-    """Evaluate pycode, run expected function main in it.
+    """Evaluate pycode in the given environment.
 
-    Raises: KeyError if no object called 'main' is found in the code.
     Args:
         pycode (str): python script as txt
         env (dict of any): preset values used as globals during evaluation
@@ -22,13 +21,10 @@ def eval_script(pycode, env, outputs):
     try:
         ast = compile(pycode, "<rem str>", 'exec')
         eval(ast, loc)
+        outvals = [loc[name] for name in outputs]
         status = ('OK', "")
     except Exception as e:
         status = (e.__class__.__name__, e.message)
-
-    if status[0] == 'OK':
-        outvals = [loc[name] for name in outputs]
-    else:
         outvals = []
 
     return status, outvals
